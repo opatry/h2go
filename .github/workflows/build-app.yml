@@ -1,0 +1,16 @@
+on:
+  workflow_call:
+
+jobs:
+  build:
+    name: 🔨 Build
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    - name: 📱 Android App
+      run: |
+          ./gradlew --no-daemon --parallel :h2go-app:assembleRelease \
+            -Pci=true
