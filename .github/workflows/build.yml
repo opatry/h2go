@@ -1,0 +1,21 @@
+name: Build & Test
+
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - '**/*.md'
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-apps:
+    uses: ./.github/workflows/build-app.yml
+
+  unit-tests:
+    uses: ./.github/workflows/unit-tests.yml
+
+  coverage:
+    uses: ./.github/workflows/coverage.yml

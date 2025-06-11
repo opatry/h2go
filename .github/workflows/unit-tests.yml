@@ -1,0 +1,26 @@
+on:
+  workflow_call:
+
+jobs:
+  unit-tests:
+    name: ✅ Tests
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    - name: ✅ Unit tests
+      run: |
+        ./gradlew --no-daemon --parallel --console=plain \
+          test \
+          -x testDebugUnitTest
+
+    - name: 🗒️ Publish Test Reports
+      uses: mikepenz/action-junit-report@v4
+      if: success() || failure()
+      with:
+        detailed_summary: true
+        require_passed_tests: true
+        require_tests: true
+        report_paths: '**/build/test-results/**/TEST-*.xml'
