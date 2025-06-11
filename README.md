@@ -17,7 +17,7 @@ Built with a modern Android stack, **H₂Go!** is designed to be simple, fast, a
 
 - [Kotlin](https://kotlinlang.org/)
 - [Kotlin coroutines](https://kotlinlang.org/docs/reference/coroutines/coroutines-guide.html)
-- [Room](https://developer.android.com/training/data-storage/room) for local persistance
+- [Room](https://developer.android.com/training/data-storage/room) for local persistence
 - [Koin](https://insert-koin.io/) for dependency injection
 - [Material Design 3 Components](https://developer.android.com/develop/ui/compose/designsystems/material3)
 - [Jetpack Compose](https://developer.android.com/jetpack/compose)
