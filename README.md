@@ -13,14 +13,6 @@ Built with a modern Android stack, **H₂Go!** is designed to be simple, fast, a
 - **Smart Reminders:** Get gentle nudges when it's time to drink.
 - **Data Backup & Restore:** Never lose your progress (via Google Drive).
 
-## 🛠️ Tech Stack & Architecture
-
-This project is a showcase of modern Android development, built with a focus on scalability, testability, and a reactive UI.
-
-### Architecture
-- **Clean Architecture:** A clear separation of concerns between each layers. This makes the codebase modular, independent of frameworks, and highly testable.
-- **Unidirectional Data Flow (UDF):** The UI observes a single stream of `UiState` from the ViewModel, ensuring a predictable and debuggable state management system.
-
 ## 🛠️  Tech stack
 
 - [Kotlin](https://kotlinlang.org/)
