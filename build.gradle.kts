@@ -50,6 +50,7 @@ dependencies {
 
 val koverExcludedClasses = listOf(
     "net.opatry.h2go.app.di.*",
+    "net.opatry.h2go.preference.di.*",
 )
 
 kover {
