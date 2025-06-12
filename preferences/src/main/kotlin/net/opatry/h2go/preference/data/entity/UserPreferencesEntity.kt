@@ -20,14 +20,17 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.preference.data.entity
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertThat(2 + 2).isEqualTo(4)
-    }
-} 
+@Entity(tableName = "user_preferences")
+data class UserPreferencesEntity(
+    @PrimaryKey val id: Long = 1,
+    val dailyTarget: Int,
+    val glassVolume: Int,
+    val volumeUnit: String,
+    val areNotificationsEnabled: Boolean,
+    val notificationFrequencyInHours: Int,
+)

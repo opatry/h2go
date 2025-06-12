@@ -20,14 +20,14 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.preference.domain
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import kotlinx.coroutines.flow.Flow
 
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertThat(2 + 2).isEqualTo(4)
-    }
-} 
+interface UserPreferencesRepository {
+    fun getUserPreferences(): Flow<UserPreferences?>
+
+    suspend fun updateUserPreferences(preferences: UserPreferences)
+
+    suspend fun resetUserPreferences(defaultValue: UserPreferences)
+}

@@ -20,14 +20,12 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.preference.domain
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
-
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertThat(2 + 2).isEqualTo(4)
-    }
-} 
+data class UserPreferences(
+    val dailyTarget: Int,
+    val glassVolume: Int,
+    val volumeUnit: VolumeUnit,
+    val areNotificationsEnabled: Boolean,
+    val notificationFrequencyInHours: Int,
+)

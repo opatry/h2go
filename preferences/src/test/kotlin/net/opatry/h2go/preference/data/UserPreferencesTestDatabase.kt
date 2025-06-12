@@ -20,14 +20,13 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.preference.data
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import net.opatry.h2go.preference.data.entity.UserPreferencesEntity
 
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertThat(2 + 2).isEqualTo(4)
-    }
-} 
+@Database(entities = [UserPreferencesEntity::class], version = 1, exportSchema = false)
+abstract class UserPreferencesTestDatabase : RoomDatabase() {
+    abstract fun userPreferencesDao(): UserPreferencesDao
+}

@@ -1,5 +1,6 @@
 [![MIT License](https://img.shields.io/badge/license-MIT-rgb%2879%2C195%2C247%29)](https://github.com/opatry/h2go/blob/main/LICENSE)
 [![Build & Test](https://github.com/opatry/h2go/actions/workflows/build.yml/badge.svg)](https://github.com/opatry/h2go/actions/workflows/build.yml)
+![Coverage 0%](https://img.shields.io/badge/Coverage-0%25-rgb%28139%2C0%2C0%29)
 
 # H₂Go! 💧
 

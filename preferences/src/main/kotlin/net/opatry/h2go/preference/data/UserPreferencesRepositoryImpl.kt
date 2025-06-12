@@ -20,14 +20,31 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.preference.data
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapLatest
+import net.opatry.h2go.preference.domain.UserPreferences
+import net.opatry.h2go.preference.domain.UserPreferencesRepository
 
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertThat(2 + 2).isEqualTo(4)
+class UserPreferencesRepositoryImpl(
+    private val dao: UserPreferencesDao,
+    private val mapper: UserPreferencesMapper,
+) : UserPreferencesRepository {
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getUserPreferences(): Flow<UserPreferences?> = dao.getUserPreferences().mapLatest { stored ->
+        runCatching {
+            stored?.let(mapper::toDomain)
+        }.getOrNull()
     }
-} 
+
+    override suspend fun updateUserPreferences(preferences: UserPreferences) {
+        dao.upsert(mapper.toEntity(preferences))
+    }
+
+    override suspend fun resetUserPreferences(defaultValue: UserPreferences) {
+        dao.reset(mapper.toEntity(defaultValue))
+    }
+}

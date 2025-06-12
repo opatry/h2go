@@ -18,4 +18,5 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "h2go"
 
-include(":h2go-app") 
+include(":h2go-app")
+include(":preferences") 

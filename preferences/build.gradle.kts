@@ -20,14 +20,39 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+plugins {
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.jetbrains.kotlin.android)
+    alias(libs.plugins.ksp)
+}
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+android {
+    namespace = "net.opatry.h2go.preferences"
+    compileSdk = libs.versions.compileSdk.get().toInt()
 
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertThat(2 + 2).isEqualTo(4)
+    defaultConfig {
+        minSdk = libs.versions.minSdk.get().toInt()
     }
-} 
+
+    kotlin {
+        jvmToolchain(17)
+    }
+}
+
+dependencies {
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.room.common)
+
+    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(libs.koin.core)
+
+    ksp(libs.androidx.room.compiler)
+
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.junit)
+    testImplementation(libs.assertj.core)
+    testImplementation(libs.androidx.room.runtime.jvm)
+    testImplementation(libs.androidx.sqlite.bundled.jvm)
+    testRuntimeOnly(libs.androidx.sqlite.jvm)
+    implementation(libs.koin.test)
+}

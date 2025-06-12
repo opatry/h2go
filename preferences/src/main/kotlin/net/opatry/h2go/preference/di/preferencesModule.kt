@@ -20,14 +20,19 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.preference.di
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import net.opatry.h2go.preference.data.UserPreferencesMapper
+import net.opatry.h2go.preference.data.UserPreferencesRepositoryImpl
+import net.opatry.h2go.preference.domain.UserPreferencesRepository
+import org.koin.core.module.dsl.singleOf
+import org.koin.dsl.bind
+import org.koin.dsl.module
 
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertThat(2 + 2).isEqualTo(4)
-    }
-} 
+val preferencesModule = module {
+
+    singleOf(::UserPreferencesMapper)
+
+    singleOf(::UserPreferencesRepositoryImpl) bind UserPreferencesRepository::class
+
+}

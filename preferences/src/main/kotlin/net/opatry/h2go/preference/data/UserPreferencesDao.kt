@@ -20,14 +20,30 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.preference.data
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
+import net.opatry.h2go.preference.data.entity.UserPreferencesEntity
 
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertThat(2 + 2).isEqualTo(4)
+@Dao
+interface UserPreferencesDao {
+    @Query("SELECT * FROM user_preferences WHERE id = 1 LIMIT 1")
+    fun getUserPreferences(): Flow<UserPreferencesEntity?>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(userPreferences: UserPreferencesEntity): Long
+
+    @Query("DELETE FROM user_preferences")
+    suspend fun clear()
+
+    @Transaction
+    suspend fun reset(defaultPreferences: UserPreferencesEntity): Long {
+        clear()
+        return upsert(defaultPreferences)
     }
-} 
+}

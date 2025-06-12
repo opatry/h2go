@@ -20,14 +20,25 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.preference.di
 
-import org.assertj.core.api.Assertions.assertThat
+import net.opatry.h2go.preference.data.UserPreferencesDao
+import net.opatry.h2go.preference.data.UserPreferencesRepositoryImpl
 import org.junit.jupiter.api.Test
+import org.koin.core.annotation.KoinExperimentalAPI
+import org.koin.test.verify.definition
+import org.koin.test.verify.injectedParameters
+import org.koin.test.verify.verify
 
-class ExampleUnitTest {
+@OptIn(KoinExperimentalAPI::class)
+class PreferencesModuleTest {
+
     @Test
-    fun addition_isCorrect() {
-        assertThat(2 + 2).isEqualTo(4)
+    fun `verify logging module`() {
+        preferencesModule.verify(
+            injections = injectedParameters(
+                definition<UserPreferencesRepositoryImpl>(UserPreferencesDao::class),
+            )
+        )
     }
-} 
+}

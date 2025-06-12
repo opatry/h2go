@@ -20,14 +20,27 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.preference.data
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import net.opatry.h2go.preference.data.entity.UserPreferencesEntity
+import net.opatry.h2go.preference.domain.UserPreferences
+import net.opatry.h2go.preference.domain.VolumeUnit
 
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertThat(2 + 2).isEqualTo(4)
-    }
-} 
+class UserPreferencesMapper {
+
+    fun toDomain(entity: UserPreferencesEntity) = UserPreferences(
+        dailyTarget = entity.dailyTarget,
+        glassVolume = entity.glassVolume,
+        volumeUnit = VolumeUnit.valueOf(entity.volumeUnit),
+        areNotificationsEnabled = entity.areNotificationsEnabled,
+        notificationFrequencyInHours = entity.notificationFrequencyInHours,
+    )
+
+    fun toEntity(preferences: UserPreferences) = UserPreferencesEntity(
+        dailyTarget = preferences.dailyTarget,
+        glassVolume = preferences.glassVolume,
+        volumeUnit = preferences.volumeUnit.name,
+        areNotificationsEnabled = preferences.areNotificationsEnabled,
+        notificationFrequencyInHours = preferences.notificationFrequencyInHours,
+    )
+}
