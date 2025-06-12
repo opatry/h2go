@@ -36,8 +36,10 @@ androidx-material3 = { module = "androidx.compose.material3:material3", version.
 androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 androidx-room-common = { module = "androidx.room:room-common", version.ref = "room" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
+androidx-room-runtime-jvm = { module = "androidx.room:room-runtime-jvm", version.ref = "room" }
 androidx-sqlite-bundled = { module = "androidx.sqlite:sqlite-bundled", version.ref = "sqlite" }
-androidx-room-testing = { module = "androidx.room:room-testing", version.ref = "room" }
+androidx-sqlite-bundled-jvm = { module = "androidx.sqlite:sqlite-bundled-jvm", version.ref = "sqlite" }
+androidx-sqlite-jvm = { module = "androidx.sqlite:sqlite-jvm", version.ref = "sqlite" }
 
 koin-bom = { module = "io.insert-koin:koin-bom", version.ref = "koin" }
 koin-core = { module = "io.insert-koin:koin-core" }

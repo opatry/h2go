@@ -20,35 +20,30 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.ksp)
-}
+package net.opatry.h2go.preference.data
 
-android {
-    namespace = "net.opatry.h2go.preferences"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.Query
+import androidx.room.Transaction
+import kotlinx.coroutines.flow.Flow
+import net.opatry.h2go.preference.data.entity.UserPreferencesEntity
 
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
+@Dao
+interface UserPreferencesDao {
+    @Query("SELECT * FROM user_preferences WHERE id = 1 LIMIT 1")
+    fun getUserPreferences(): Flow<UserPreferencesEntity?>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun upsert(userPreferences: UserPreferencesEntity): Long
+
+    @Query("DELETE FROM user_preferences")
+    suspend fun clear()
+
+    @Transaction
+    suspend fun reset(defaultPreferences: UserPreferencesEntity): Long {
+        clear()
+        return upsert(defaultPreferences)
     }
-
-    kotlin {
-        jvmToolchain(17)
-    }
-}
-
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.androidx.room.common)
-
-    ksp(libs.androidx.room.compiler)
-
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.junit)
-    testImplementation(libs.assertj.core)
-    testImplementation(libs.androidx.room.runtime.jvm)
-    testImplementation(libs.androidx.sqlite.bundled.jvm)
-    testRuntimeOnly(libs.androidx.sqlite.jvm)
 }

@@ -20,35 +20,9 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.ksp)
-}
+package net.opatry.h2go.preference.domain
 
-android {
-    namespace = "net.opatry.h2go.preferences"
-    compileSdk = libs.versions.compileSdk.get().toInt()
-
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-    }
-
-    kotlin {
-        jvmToolchain(17)
-    }
-}
-
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.androidx.room.common)
-
-    ksp(libs.androidx.room.compiler)
-
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.junit)
-    testImplementation(libs.assertj.core)
-    testImplementation(libs.androidx.room.runtime.jvm)
-    testImplementation(libs.androidx.sqlite.bundled.jvm)
-    testRuntimeOnly(libs.androidx.sqlite.jvm)
+enum class VolumeUnit {
+    Milliliter,
+    Oz,
 }

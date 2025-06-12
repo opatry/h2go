@@ -20,35 +20,31 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.ksp)
-}
+package net.opatry.h2go.preference.data
 
-android {
-    namespace = "net.opatry.h2go.preferences"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.mapLatest
+import net.opatry.h2go.preference.domain.UserPreferences
+import net.opatry.h2go.preference.domain.UserPreferencesRepository
 
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
+class UserPreferencesRepositoryImpl(
+    private val dao: UserPreferencesDao,
+    private val mapper: UserPreferencesMapper,
+) : UserPreferencesRepository {
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    override fun getUserPreferences(): Flow<UserPreferences?> = dao.getUserPreferences().mapLatest { stored ->
+        runCatching {
+            stored?.let(mapper::toDomain)
+        }.getOrNull()
     }
 
-    kotlin {
-        jvmToolchain(17)
+    override suspend fun updateUserPreferences(preferences: UserPreferences) {
+        dao.upsert(mapper.toEntity(preferences))
     }
-}
 
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.androidx.room.common)
-
-    ksp(libs.androidx.room.compiler)
-
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.junit)
-    testImplementation(libs.assertj.core)
-    testImplementation(libs.androidx.room.runtime.jvm)
-    testImplementation(libs.androidx.sqlite.bundled.jvm)
-    testRuntimeOnly(libs.androidx.sqlite.jvm)
+    override suspend fun resetUserPreferences(defaultValue: UserPreferences) {
+        dao.reset(mapper.toEntity(defaultValue))
+    }
 }

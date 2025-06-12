@@ -20,35 +20,13 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.ksp)
-}
+package net.opatry.h2go.preference.data
 
-android {
-    namespace = "net.opatry.h2go.preferences"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import net.opatry.h2go.preference.data.entity.UserPreferencesEntity
 
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-    }
-
-    kotlin {
-        jvmToolchain(17)
-    }
-}
-
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.androidx.room.common)
-
-    ksp(libs.androidx.room.compiler)
-
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.junit)
-    testImplementation(libs.assertj.core)
-    testImplementation(libs.androidx.room.runtime.jvm)
-    testImplementation(libs.androidx.sqlite.bundled.jvm)
-    testRuntimeOnly(libs.androidx.sqlite.jvm)
+@Database(entities = [UserPreferencesEntity::class], version = 1, exportSchema = false)
+abstract class UserPreferencesTestDatabase : RoomDatabase() {
+    abstract fun userPreferencesDao(): UserPreferencesDao
 }

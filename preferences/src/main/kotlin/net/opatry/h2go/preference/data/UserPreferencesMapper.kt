@@ -20,35 +20,27 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.ksp)
-}
+package net.opatry.h2go.preference.data
 
-android {
-    namespace = "net.opatry.h2go.preferences"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+import net.opatry.h2go.preference.data.entity.UserPreferencesEntity
+import net.opatry.h2go.preference.domain.UserPreferences
+import net.opatry.h2go.preference.domain.VolumeUnit
 
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-    }
+class UserPreferencesMapper {
 
-    kotlin {
-        jvmToolchain(17)
-    }
-}
+    fun toDomain(entity: UserPreferencesEntity) = UserPreferences(
+        dailyTarget = entity.dailyTarget,
+        glassVolume = entity.glassVolume,
+        volumeUnit = VolumeUnit.valueOf(entity.volumeUnit),
+        areNotificationsEnabled = entity.areNotificationsEnabled,
+        notificationFrequencyInHours = entity.notificationFrequencyInHours,
+    )
 
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.androidx.room.common)
-
-    ksp(libs.androidx.room.compiler)
-
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.junit)
-    testImplementation(libs.assertj.core)
-    testImplementation(libs.androidx.room.runtime.jvm)
-    testImplementation(libs.androidx.sqlite.bundled.jvm)
-    testRuntimeOnly(libs.androidx.sqlite.jvm)
+    fun toEntity(preferences: UserPreferences) = UserPreferencesEntity(
+        dailyTarget = preferences.dailyTarget,
+        glassVolume = preferences.glassVolume,
+        volumeUnit = preferences.volumeUnit.name,
+        areNotificationsEnabled = preferences.areNotificationsEnabled,
+        notificationFrequencyInHours = preferences.notificationFrequencyInHours,
+    )
 }

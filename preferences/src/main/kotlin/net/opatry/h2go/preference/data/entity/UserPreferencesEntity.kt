@@ -20,35 +20,17 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-plugins {
-    alias(libs.plugins.android.library)
-    alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.ksp)
-}
+package net.opatry.h2go.preference.data.entity
 
-android {
-    namespace = "net.opatry.h2go.preferences"
-    compileSdk = libs.versions.compileSdk.get().toInt()
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
-    defaultConfig {
-        minSdk = libs.versions.minSdk.get().toInt()
-    }
-
-    kotlin {
-        jvmToolchain(17)
-    }
-}
-
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.androidx.room.common)
-
-    ksp(libs.androidx.room.compiler)
-
-    testImplementation(libs.kotlinx.coroutines.test)
-    testImplementation(libs.junit)
-    testImplementation(libs.assertj.core)
-    testImplementation(libs.androidx.room.runtime.jvm)
-    testImplementation(libs.androidx.sqlite.bundled.jvm)
-    testRuntimeOnly(libs.androidx.sqlite.jvm)
-}
+@Entity(tableName = "user_preferences")
+data class UserPreferencesEntity(
+    @PrimaryKey val id: Long = 1,
+    val dailyTarget: Int,
+    val glassVolume: Int,
+    val volumeUnit: String,
+    val areNotificationsEnabled: Boolean,
+    val notificationFrequencyInHours: Int,
+)
