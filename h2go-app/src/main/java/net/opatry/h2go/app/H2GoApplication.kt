@@ -24,6 +24,7 @@ package net.opatry.h2go.app
 
 import android.app.Application
 import net.opatry.h2go.app.data.di.databaseModule
+import net.opatry.h2go.onboarding.di.onboardingModule
 import net.opatry.h2go.preference.di.preferencesModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.androix.startup.KoinStartup
@@ -38,6 +39,7 @@ class H2GoApplication : Application(), KoinStartup {
         modules(
             databaseModule,
             preferencesModule,
+            onboardingModule,
         )
     }
 }

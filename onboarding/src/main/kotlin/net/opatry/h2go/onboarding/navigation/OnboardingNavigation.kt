@@ -20,28 +20,35 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app.di
+package net.opatry.h2go.onboarding.navigation
 
-import net.opatry.h2go.app.data.di.databaseModule
-import net.opatry.h2go.onboarding.di.onboardingModule
-import net.opatry.h2go.preference.di.preferencesModule
-import org.junit.jupiter.api.Test
-import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.dsl.module
-import org.koin.test.verify.verify
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.compose.composable
+import androidx.navigation.navigation
+import net.opatry.h2go.onboarding.ui.PreferencesScreen
+import net.opatry.h2go.onboarding.ui.WelcomeScreen
 
-@OptIn(KoinExperimentalAPI::class)
-class H2GoDITest {
-
-    @Test
-    fun `verify all modules`() {
-        val allModules = module {
-            includes(
-                databaseModule,
-                preferencesModule,
-                onboardingModule,
+fun NavGraphBuilder.onboardingNavigation(
+    navController: NavController,
+    onNavigateToMain: () -> Unit,
+) {
+    navigation<OnboardingRoutes>(startDestination = OnboardingRoutes.Welcome) {
+        composable<OnboardingRoutes.Welcome> {
+            WelcomeScreen(
+                onContinueClicked = {
+                    navController.navigate(OnboardingRoutes.Preferences) {
+                        popUpTo<OnboardingRoutes.Welcome> { inclusive = true }
+                    }
+                },
+                onNavigateToMain = onNavigateToMain,
             )
         }
-        allModules.verify()
+
+        composable<OnboardingRoutes.Preferences> {
+            PreferencesScreen(
+                onNavigateToMain = onNavigateToMain,
+            )
+        }
     }
 }

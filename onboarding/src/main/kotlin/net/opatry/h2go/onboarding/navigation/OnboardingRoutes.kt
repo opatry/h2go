@@ -20,28 +20,16 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app.di
+package net.opatry.h2go.onboarding.navigation
 
-import net.opatry.h2go.app.data.di.databaseModule
-import net.opatry.h2go.onboarding.di.onboardingModule
-import net.opatry.h2go.preference.di.preferencesModule
-import org.junit.jupiter.api.Test
-import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.dsl.module
-import org.koin.test.verify.verify
+import kotlinx.serialization.Serializable
 
-@OptIn(KoinExperimentalAPI::class)
-class H2GoDITest {
+@Serializable
+object OnboardingRoutes {
 
-    @Test
-    fun `verify all modules`() {
-        val allModules = module {
-            includes(
-                databaseModule,
-                preferencesModule,
-                onboardingModule,
-            )
-        }
-        allModules.verify()
-    }
+    @Serializable
+    data object Welcome
+
+    @Serializable
+    data object Preferences
 }

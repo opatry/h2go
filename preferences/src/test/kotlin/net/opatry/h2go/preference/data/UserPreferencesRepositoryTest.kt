@@ -35,6 +35,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import kotlin.time.Duration.Companion.hours
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class UserPreferencesRepositoryTest {
@@ -103,7 +104,7 @@ class UserPreferencesRepositoryTest {
         )
 
         // When
-        val updatedPreferences = UserPreferences(1800, 200, VolumeUnit.Oz, false, 4)
+        val updatedPreferences = UserPreferences(1800, 200, VolumeUnit.Oz, false, 4.hours)
         repository.updateUserPreferences(updatedPreferences)
 
         // Then
@@ -125,7 +126,7 @@ class UserPreferencesRepositoryTest {
         )
 
         // When
-        val defaultPreferences = UserPreferences(2000, 25, VolumeUnit.Milliliter, true, 2)
+        val defaultPreferences = UserPreferences(2000, 25, VolumeUnit.Milliliter, true, 2.hours)
         repository.resetUserPreferences(defaultPreferences)
 
         // Then

@@ -20,28 +20,22 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app.di
+package net.opatry.h2go.onboarding.di
 
-import net.opatry.h2go.app.data.di.databaseModule
-import net.opatry.h2go.onboarding.di.onboardingModule
-import net.opatry.h2go.preference.di.preferencesModule
-import org.junit.jupiter.api.Test
-import org.koin.core.annotation.KoinExperimentalAPI
+import net.opatry.h2go.onboarding.domain.CheckUserPreferencesExistUseCase
+import net.opatry.h2go.onboarding.domain.SaveInitialUserPreferencesUseCase
+import net.opatry.h2go.onboarding.presentation.PreferencesViewModel
+import net.opatry.h2go.onboarding.presentation.UserVolumeUnitMapper
+import net.opatry.h2go.onboarding.presentation.WelcomeViewModel
+import org.koin.core.module.dsl.singleOf
+import org.koin.core.module.dsl.viewModelOf
 import org.koin.dsl.module
-import org.koin.test.verify.verify
 
-@OptIn(KoinExperimentalAPI::class)
-class H2GoDITest {
+val onboardingModule = module {
+    singleOf(::CheckUserPreferencesExistUseCase)
+    viewModelOf(::WelcomeViewModel)
 
-    @Test
-    fun `verify all modules`() {
-        val allModules = module {
-            includes(
-                databaseModule,
-                preferencesModule,
-                onboardingModule,
-            )
-        }
-        allModules.verify()
-    }
+    singleOf(::SaveInitialUserPreferencesUseCase)
+    singleOf(::UserVolumeUnitMapper)
+    viewModelOf(::PreferencesViewModel)
 }

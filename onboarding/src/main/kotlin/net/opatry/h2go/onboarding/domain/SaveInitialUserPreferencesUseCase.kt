@@ -20,28 +20,34 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.preference.data
+package net.opatry.h2go.onboarding.domain
 
-import net.opatry.h2go.preference.data.entity.UserPreferencesEntity
 import net.opatry.h2go.preference.domain.UserPreferences
+import net.opatry.h2go.preference.domain.UserPreferencesRepository
 import net.opatry.h2go.preference.domain.VolumeUnit
-import kotlin.time.Duration.Companion.hours
+import kotlin.time.Duration
 
-class UserPreferencesMapper {
-
-    fun toDomain(entity: UserPreferencesEntity) = UserPreferences(
-        dailyTarget = entity.dailyTarget,
-        glassVolume = entity.glassVolume,
-        volumeUnit = VolumeUnit.valueOf(entity.volumeUnit),
-        areNotificationsEnabled = entity.areNotificationsEnabled,
-        notificationsFrequency = entity.notificationFrequencyInHours.hours,
-    )
-
-    fun toEntity(preferences: UserPreferences) = UserPreferencesEntity(
-        dailyTarget = preferences.dailyTarget,
-        glassVolume = preferences.glassVolume,
-        volumeUnit = preferences.volumeUnit.name,
-        areNotificationsEnabled = preferences.areNotificationsEnabled,
-        notificationFrequencyInHours = preferences.notificationsFrequency.inWholeHours.toInt(),
-    )
-}
+class SaveInitialUserPreferencesUseCase(
+    private val userPreferencesRepository: UserPreferencesRepository,
+) {
+    suspend operator fun invoke(
+        volumeUnit: VolumeUnit,
+        areNotificationsEnabled: Boolean,
+        notificationsFrequency: Duration,
+    ) {
+        val preferences = UserPreferences(
+            dailyTarget = when (volumeUnit) {
+                VolumeUnit.Milliliter -> 2000 // 2L
+                VolumeUnit.Oz -> 64 // 64 oz = ~2L
+            },
+            glassVolume = when (volumeUnit) {
+                VolumeUnit.Milliliter -> 250 // 250ml
+                VolumeUnit.Oz -> 8 // 8 oz = ~250ml
+            },
+            volumeUnit = volumeUnit,
+            areNotificationsEnabled = areNotificationsEnabled,
+            notificationsFrequency = notificationsFrequency,
+        )
+        userPreferencesRepository.updateUserPreferences(preferences)
+    }
+} 

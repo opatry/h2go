@@ -29,6 +29,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import kotlin.time.Duration.Companion.hours
 
 class UserPreferencesMapperTest {
 
@@ -70,7 +71,7 @@ class UserPreferencesMapperTest {
         assertThat(result.glassVolume).isEqualTo(250)
         assertThat(result.volumeUnit).isEqualTo(volumeUnit)
         assertThat(result.areNotificationsEnabled).isEqualTo(areNotificationsEnabled)
-        assertThat(result.notificationFrequencyInHours).isEqualTo(2)
+        assertThat(result.notificationsFrequency).isEqualTo(2.hours)
     }
 
     @ParameterizedTest(name = "given volumeUnit={0} and areNotificationsEnabled={1}, then should map correctly")
@@ -86,7 +87,7 @@ class UserPreferencesMapperTest {
             glassVolume = 300,
             volumeUnit = volumeUnit,
             areNotificationsEnabled = areNotificationsEnabled,
-            notificationFrequencyInHours = 3,
+            notificationsFrequency = 3.hours,
         )
 
         // When

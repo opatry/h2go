@@ -40,6 +40,7 @@ val koverProjects = listOf(
     // Ignore app until there is really code to cover
     // projects.h2goApp,
     projects.preferences,
+    projects.onboarding,
 )
 
 dependencies {
