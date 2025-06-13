@@ -20,28 +20,12 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app.di
+package net.opatry.h2go.onboarding.presentation
 
-import net.opatry.h2go.app.data.di.databaseModule
-import net.opatry.h2go.onboarding.di.onboardingModule
-import net.opatry.h2go.preference.di.preferencesModule
-import org.junit.jupiter.api.Test
-import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.dsl.module
-import org.koin.test.verify.verify
 
-@OptIn(KoinExperimentalAPI::class)
-class H2GoDITest {
-
-    @Test
-    fun `verify all modules`() {
-        val allModules = module {
-            includes(
-                databaseModule,
-                preferencesModule,
-                onboardingModule,
-            )
-        }
-        allModules.verify()
-    }
+sealed interface WelcomeUiState {
+    object Loading : WelcomeUiState
+    object ShowWelcome : WelcomeUiState
+    object NavigateToPreferences : WelcomeUiState
+    object NavigateToMain : WelcomeUiState
 }
