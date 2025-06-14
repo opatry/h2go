@@ -20,34 +20,33 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.app.navigation
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import net.opatry.h2go.app.navigation.MainNavigation
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import net.opatry.h2go.onboarding.navigation.OnboardingRoutes
+import net.opatry.h2go.onboarding.navigation.onboardingNavigation
 
-class MainActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+@Composable
+fun MainNavigation() {
+    val navController = rememberNavController()
 
-        enableEdgeToEdge()
-
-        setContent {
-            MaterialTheme {
-                Surface(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .statusBarsPadding(),
-                ) {
-                    MainNavigation()
-                }
+    NavHost(navController, startDestination = OnboardingRoutes) {
+        onboardingNavigation(navController) {
+            navController.navigate(MainRoutes.Main) {
+                popUpTo<OnboardingRoutes>()
+            }
+        }
+        composable<MainRoutes.Main> {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("MAIN SCREEN")
             }
         }
     }
