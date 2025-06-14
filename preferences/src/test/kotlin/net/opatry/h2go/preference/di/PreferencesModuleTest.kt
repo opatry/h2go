@@ -34,7 +34,7 @@ import org.koin.test.verify.verify
 class PreferencesModuleTest {
 
     @Test
-    fun `verify logging module`() {
+    fun `verify preference module`() {
         preferencesModule.verify(
             injections = injectedParameters(
                 definition<UserPreferencesRepositoryImpl>(UserPreferencesDao::class),
