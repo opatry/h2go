@@ -25,7 +25,8 @@ plugins {
     alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.jetbrains.kotlin.compose.compiler)
     alias(libs.plugins.jetbrains.kotlin.serialization)
-    alias(libs.plugins.kover)
+    alias(libs.plugins.ksp)
+    alias(libs.plugins.androidx.room)
 }
 
 val versionCodeValue = System.getenv("CI_BUILD_NUMBER")?.toIntOrNull() ?: 1
@@ -35,7 +36,7 @@ android {
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "com.h2go.app"
+        applicationId = "net.opatry.h2go"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
         versionCode = versionCodeValue
@@ -69,9 +70,15 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
 }
 
 dependencies {
+    implementation(projects.preferences)
+
     implementation(libs.kotlinx.coroutines.android) {
         because("requires Dispatchers.Main & co at runtime for Android")
         // java.lang.IllegalStateException: Module with the Main dispatcher is missing. Add dependency providing the Main dispatcher, e.g. 'kotlinx-coroutines-android' and ensure it has the same version as 'kotlinx-coroutines-core'
@@ -91,6 +98,10 @@ dependencies {
 
     implementation(libs.kotlinx.serialization)
 
+    implementation(libs.androidx.room.runtime)
+
+    ksp(libs.androidx.room.compiler)
+
     implementation(libs.androidx.ui.tooling.preview.android)
     implementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
@@ -100,4 +111,5 @@ dependencies {
 
     testImplementation(libs.junit)
     testImplementation(libs.assertj.core)
+    testImplementation(libs.koin.test)
 }

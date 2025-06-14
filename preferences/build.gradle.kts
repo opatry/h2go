@@ -43,7 +43,7 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.androidx.room.common)
 
-    implementation(project.dependencies.platform(libs.koin.bom))
+    implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
 
     ksp(libs.androidx.room.compiler)
