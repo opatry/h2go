@@ -20,30 +20,33 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
+package net.opatry.test.util.android
+
+import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.getKoinApplicationOrNull
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.context.GlobalContext.unloadKoinModules
+import org.koin.core.context.loadKoinModules
+import org.koin.core.module.Module
+
+class KoinTestRule(
+    private val modules: List<Module>
+) : TestWatcher() {
+    override fun starting(description: Description) {
+        if (getKoinApplicationOrNull() == null) {
+            startKoin {
+                androidContext(InstrumentationRegistry.getInstrumentation().targetContext.applicationContext)
+                modules(modules)
+            }
+        } else {
+            loadKoinModules(modules)
+        }
+    }
+
+    override fun finished(description: Description) {
+        unloadKoinModules(modules)
     }
 }
-
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-    }
-}
-
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
-rootProject.name = "H2Go"
-
-include(":h2go-app")
-include(":preferences") 
-include(":onboarding")
-include(":android-test-util")
-include(":test-util")
