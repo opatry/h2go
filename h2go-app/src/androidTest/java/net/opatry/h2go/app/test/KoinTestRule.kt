@@ -20,28 +20,33 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app.di
+package net.opatry.h2go.app.test
 
-import net.opatry.h2go.app.data.di.databaseModule
-import net.opatry.h2go.onboarding.di.onboardingModule
-import net.opatry.h2go.preference.di.preferencesModule
-import org.junit.jupiter.api.Test
-import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.dsl.module
-import org.koin.test.verify.verify
+import androidx.test.platform.app.InstrumentationRegistry
+import org.junit.rules.TestWatcher
+import org.junit.runner.Description
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.GlobalContext.getKoinApplicationOrNull
+import org.koin.core.context.GlobalContext.startKoin
+import org.koin.core.context.GlobalContext.unloadKoinModules
+import org.koin.core.context.loadKoinModules
+import org.koin.core.module.Module
 
-@OptIn(KoinExperimentalAPI::class)
-class H2GoDITest {
-
-    @Test
-    fun `verify all modules`() {
-        val allModules = module {
-            includes(
-                databaseModule,
-                preferencesModule,
-                onboardingModule,
-            )
+class KoinTestRule(
+    private val modules: List<Module>
+) : TestWatcher() {
+    override fun starting(description: Description) {
+        if (getKoinApplicationOrNull() == null) {
+            startKoin {
+                androidContext(InstrumentationRegistry.getInstrumentation().targetContext.applicationContext)
+                modules(modules)
+            }
+        } else {
+            loadKoinModules(modules)
         }
-        allModules.verify()
+    }
+
+    override fun finished(description: Description) {
+        unloadKoinModules(modules)
     }
 }

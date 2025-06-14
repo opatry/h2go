@@ -20,28 +20,27 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app.di
+package net.opatry.h2go.onboarding.di
 
-import net.opatry.h2go.app.data.di.databaseModule
-import net.opatry.h2go.onboarding.di.onboardingModule
-import net.opatry.h2go.preference.di.preferencesModule
+import net.opatry.h2go.onboarding.domain.CheckUserPreferencesExistUseCase
+import net.opatry.h2go.onboarding.domain.SaveInitialUserPreferencesUseCase
+import net.opatry.h2go.preference.domain.UserPreferencesRepository
 import org.junit.jupiter.api.Test
 import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.dsl.module
+import org.koin.test.verify.definition
+import org.koin.test.verify.injectedParameters
 import org.koin.test.verify.verify
 
 @OptIn(KoinExperimentalAPI::class)
-class H2GoDITest {
+class OnboardingModuleTest {
 
     @Test
-    fun `verify all modules`() {
-        val allModules = module {
-            includes(
-                databaseModule,
-                preferencesModule,
-                onboardingModule,
+    fun `verify onboarding module`() {
+        onboardingModule.verify(
+            injections = injectedParameters(
+                definition<CheckUserPreferencesExistUseCase>(UserPreferencesRepository::class),
+                definition<SaveInitialUserPreferencesUseCase>(UserPreferencesRepository::class),
             )
-        }
-        allModules.verify()
+        )
     }
 }

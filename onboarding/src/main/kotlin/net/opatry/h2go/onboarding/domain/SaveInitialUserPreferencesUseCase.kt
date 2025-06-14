@@ -20,28 +20,33 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app.di
+package net.opatry.h2go.onboarding.domain
 
-import net.opatry.h2go.app.data.di.databaseModule
-import net.opatry.h2go.onboarding.di.onboardingModule
-import net.opatry.h2go.preference.di.preferencesModule
-import org.junit.jupiter.api.Test
-import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.dsl.module
-import org.koin.test.verify.verify
+import net.opatry.h2go.preference.domain.UserPreferences
+import net.opatry.h2go.preference.domain.UserPreferencesRepository
+import net.opatry.h2go.preference.domain.VolumeUnit
 
-@OptIn(KoinExperimentalAPI::class)
-class H2GoDITest {
-
-    @Test
-    fun `verify all modules`() {
-        val allModules = module {
-            includes(
-                databaseModule,
-                preferencesModule,
-                onboardingModule,
-            )
-        }
-        allModules.verify()
+class SaveInitialUserPreferencesUseCase(
+    private val userPreferencesRepository: UserPreferencesRepository,
+) {
+    suspend operator fun invoke(
+        volumeUnit: VolumeUnit,
+        areNotificationsEnabled: Boolean,
+        notificationFrequencyInHours: Int,
+    ) {
+        val preferences = UserPreferences(
+            dailyTarget = when (volumeUnit) {
+                VolumeUnit.Milliliter -> 2000 // 2L
+                VolumeUnit.Oz -> 64 // 64 oz = ~2L
+            },
+            glassVolume = when (volumeUnit) {
+                VolumeUnit.Milliliter -> 250 // 250ml
+                VolumeUnit.Oz -> 8 // 8 oz = ~250ml
+            },
+            volumeUnit = volumeUnit,
+            areNotificationsEnabled = areNotificationsEnabled,
+            notificationFrequencyInHours = notificationFrequencyInHours,
+        )
+        userPreferencesRepository.updateUserPreferences(preferences)
     }
-}
+} 

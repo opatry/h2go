@@ -20,28 +20,35 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app.di
+package net.opatry.h2go.onboarding.presentation
 
-import net.opatry.h2go.app.data.di.databaseModule
-import net.opatry.h2go.onboarding.di.onboardingModule
-import net.opatry.h2go.preference.di.preferencesModule
-import org.junit.jupiter.api.Test
-import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.dsl.module
-import org.koin.test.verify.verify
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+import net.opatry.h2go.onboarding.domain.CheckUserPreferencesExistUseCase
 
-@OptIn(KoinExperimentalAPI::class)
-class H2GoDITest {
+class WelcomeViewModel(
+    private val checkUserPreferencesExistUseCase: CheckUserPreferencesExistUseCase,
+) : ViewModel() {
 
-    @Test
-    fun `verify all modules`() {
-        val allModules = module {
-            includes(
-                databaseModule,
-                preferencesModule,
-                onboardingModule,
-            )
+    private val _uiState = MutableStateFlow<WelcomeUiState>(WelcomeUiState.Loading)
+    val uiState: StateFlow<WelcomeUiState> = _uiState.asStateFlow()
+
+    fun checkUserPreferences() {
+        viewModelScope.launch {
+            _uiState.value = checkUserPreferencesExistUseCase().let { exists ->
+                when {
+                    exists -> WelcomeUiState.NavigateToMain
+                    else -> WelcomeUiState.ShowWelcome
+                }
+            }
         }
-        allModules.verify()
+    }
+
+    fun onContinueClicked() {
+        _uiState.value = WelcomeUiState.NavigateToPreferences
     }
 }

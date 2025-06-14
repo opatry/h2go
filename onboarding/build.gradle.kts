@@ -23,11 +23,12 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.jetbrains.kotlin.android)
-    alias(libs.plugins.ksp)
+    alias(libs.plugins.jetbrains.kotlin.compose.compiler)
+    alias(libs.plugins.jetbrains.kotlin.serialization)
 }
 
 android {
-    namespace = "net.opatry.h2go.preferences"
+    namespace = "net.opatry.h2go.onboarding"
     compileSdk = libs.versions.compileSdk.get().toInt()
 
     defaultConfig {
@@ -37,22 +38,35 @@ android {
     kotlin {
         jvmToolchain(17)
     }
+
+    buildFeatures {
+        compose = true
+    }
 }
 
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.androidx.room.common)
+    implementation(projects.preferences)
 
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.core)
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.compose)
 
-    ksp(libs.androidx.room.compiler)
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.ui.graphics)
+    implementation(libs.androidx.ui.tooling.preview.android)
+    implementation(libs.androidx.compose.material3)
 
+    implementation(libs.androidx.navigation.compose)
+
+    debugImplementation(libs.androidx.ui.tooling)
+    debugImplementation(libs.androidx.ui.test.manifest)
+
+    testImplementation(projects.testUtil)
     testImplementation(libs.kotlinx.coroutines.test)
     testImplementation(libs.junit)
     testImplementation(libs.assertj.core)
-    testImplementation(libs.androidx.room.runtime.jvm)
-    testImplementation(libs.androidx.sqlite.bundled.jvm)
-    testRuntimeOnly(libs.androidx.sqlite.jvm)
+    testImplementation(libs.bundles.mockito)
     testImplementation(libs.koin.test)
 }

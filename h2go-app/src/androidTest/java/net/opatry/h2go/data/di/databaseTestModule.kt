@@ -20,28 +20,19 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app.di
+package net.opatry.h2go.data.di
 
-import net.opatry.h2go.app.data.di.databaseModule
-import net.opatry.h2go.onboarding.di.onboardingModule
-import net.opatry.h2go.preference.di.preferencesModule
-import org.junit.jupiter.api.Test
-import org.koin.core.annotation.KoinExperimentalAPI
+import androidx.room.Room
+import net.opatry.h2go.app.data.H2GoDatabase
 import org.koin.dsl.module
-import org.koin.test.verify.verify
 
-@OptIn(KoinExperimentalAPI::class)
-class H2GoDITest {
+val databaseTestModule = module {
+    single {
+        Room.inMemoryDatabaseBuilder<H2GoDatabase>(get())
+            .build()
+    }
 
-    @Test
-    fun `verify all modules`() {
-        val allModules = module {
-            includes(
-                databaseModule,
-                preferencesModule,
-                onboardingModule,
-            )
-        }
-        allModules.verify()
+    single {
+        get<H2GoDatabase>().userPreferencesDao()
     }
 }

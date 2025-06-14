@@ -20,28 +20,33 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app.di
+package net.opatry.h2go.app.navigation
 
-import net.opatry.h2go.app.data.di.databaseModule
-import net.opatry.h2go.onboarding.di.onboardingModule
-import net.opatry.h2go.preference.di.preferencesModule
-import org.junit.jupiter.api.Test
-import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.dsl.module
-import org.koin.test.verify.verify
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import net.opatry.h2go.onboarding.navigation.OnboardingRoutes
+import net.opatry.h2go.onboarding.navigation.onboardingNavigation
 
-@OptIn(KoinExperimentalAPI::class)
-class H2GoDITest {
-
-    @Test
-    fun `verify all modules`() {
-        val allModules = module {
-            includes(
-                databaseModule,
-                preferencesModule,
-                onboardingModule,
-            )
+@Composable
+fun MainNavigation(navController: NavHostController = rememberNavController()) {
+    NavHost(navController, startDestination = OnboardingRoutes) {
+        onboardingNavigation(navController) {
+            navController.navigate(MainRoutes.Main) {
+                popUpTo<OnboardingRoutes>()
+            }
         }
-        allModules.verify()
+        composable<MainRoutes.Main> {
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                Text("MAIN SCREEN")
+            }
+        }
     }
 }
