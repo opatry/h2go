@@ -37,8 +37,7 @@ plugins {
 }
 
 val koverProjects = listOf(
-    // Ignore app until there is really code to cover
-    // projects.h2goApp,
+    projects.h2goApp,
     projects.preferences,
     projects.onboarding,
 )
@@ -50,8 +49,17 @@ dependencies {
 }
 
 val koverExcludedClasses = listOf(
-    "net.opatry.h2go.app.di.*",
+    "net.opatry.h2go.app.data.H2GoDatabase*",
+    "net.opatry.h2go.app.data.di.*",
+    "net.opatry.h2go.app.navigation.*",
+    "net.opatry.h2go.app.ComposableSingletons*",
+    "net.opatry.h2go.app.H2GoApplication",
+    "net.opatry.h2go.preference.data.*Dao",
+    "net.opatry.h2go.preference.data.*Dao\$DefaultImpls",
     "net.opatry.h2go.preference.di.*",
+    "net.opatry.h2go.onboarding.di.*",
+    "net.opatry.h2go.onboarding.navigation.*",
+    "net.opatry.h2go.onboarding.ui.*",
 )
 
 kover {
