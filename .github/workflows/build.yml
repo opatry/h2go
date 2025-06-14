@@ -13,8 +13,12 @@ on:
       - main
 
 jobs:
-  build-apps:
+  build-app:
     uses: ./.github/workflows/build-app.yml
+    secrets:
+      PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+      KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+      KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
 
   unit-tests:
     uses: ./.github/workflows/unit-tests.yml

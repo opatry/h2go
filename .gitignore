@@ -34,4 +34,5 @@ local.properties
 bundletool-*.jar
 
 _ci/api-*.json
+_ci/*.keystore
 
