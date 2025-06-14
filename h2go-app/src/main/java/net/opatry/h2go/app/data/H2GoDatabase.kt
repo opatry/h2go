@@ -20,24 +20,19 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.app.data
 
-import android.app.Application
-import net.opatry.h2go.app.data.di.databaseModule
-import net.opatry.h2go.preference.di.preferencesModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.androix.startup.KoinStartup
-import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.dsl.koinConfiguration
+import androidx.room.Database
+import androidx.room.RoomDatabase
+import net.opatry.h2go.preference.data.UserPreferencesDao
+import net.opatry.h2go.preference.data.entity.UserPreferencesEntity
 
-@OptIn(KoinExperimentalAPI::class)
-class H2GoApplication : Application(), KoinStartup {
-
-    override fun onKoinStartup() = koinConfiguration {
-        androidContext(this@H2GoApplication)
-        modules(
-            databaseModule,
-            preferencesModule,
-        )
-    }
+@Database(
+    entities = [
+        UserPreferencesEntity::class
+    ],
+    version = 1,
+)
+abstract class H2GoDatabase : RoomDatabase() {
+    abstract fun userPreferencesDao(): UserPreferencesDao
 }

@@ -20,24 +20,18 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.data.di
 
-import android.app.Application
 import net.opatry.h2go.app.data.di.databaseModule
-import net.opatry.h2go.preference.di.preferencesModule
-import org.koin.android.ext.koin.androidContext
-import org.koin.androix.startup.KoinStartup
+import org.junit.jupiter.api.Test
 import org.koin.core.annotation.KoinExperimentalAPI
-import org.koin.dsl.koinConfiguration
+import org.koin.test.verify.verify
 
 @OptIn(KoinExperimentalAPI::class)
-class H2GoApplication : Application(), KoinStartup {
+class DatabaseModuleTest {
 
-    override fun onKoinStartup() = koinConfiguration {
-        androidContext(this@H2GoApplication)
-        modules(
-            databaseModule,
-            preferencesModule,
-        )
+    @Test
+    fun `verify database module`() {
+        databaseModule.verify()
     }
 }

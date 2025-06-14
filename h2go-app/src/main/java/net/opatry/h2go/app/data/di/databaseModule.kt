@@ -20,14 +20,17 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app
+package net.opatry.h2go.app.data.di
 
-import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import androidx.room.Room
+import net.opatry.h2go.app.data.H2GoDatabase
+import org.koin.dsl.module
 
-class ExampleUnitTest {
-    @Test
-    fun addition_isCorrect() {
-        assertThat(2 + 2).isEqualTo(4)
+val databaseModule = module {
+    single {
+        Room.databaseBuilder<H2GoDatabase>(get(), "database")
+            .build()
     }
-} 
+
+    single { get<H2GoDatabase>().userPreferencesDao() }
+}
