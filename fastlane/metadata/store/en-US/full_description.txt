@@ -1,0 +1,16 @@
+<b>H₂Go!</b> is a simple and intuitive task management app designed to seamlessly sync with Google Tasks while offering full offline-first capabilities.
+This app was built to showcase my expertise in modern Android development, using the latest tools and best practices.
+
+Key Features:
+
+•	1-Tap Logging: Add water instantly from the app or home screen widget.
+•	Live-Updating Widget: Your progress, always visible on your home screen.
+•	Historical Insights: Visualize your consistency with daily, weekly, and monthly charts.
+•	Full Personalization: Customize your daily goals, glass size, and units (ml/oz).
+•	Smart Reminders: Get gentle nudges when it's time to drink.
+•	Data Backup & Restore: Never lose your progress (via Google Drive).
+
+If you’re interested in learning more about how this project was built or in seeing the full codebase,
+visit the project’s GitHub repository!
+
+https://github.com/opatry/h2go

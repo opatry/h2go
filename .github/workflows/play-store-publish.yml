@@ -1,0 +1,92 @@
+name: 🚀 Play Store publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      track:
+        description: "Play Store track"
+        required: true
+        type: choice
+        default: internal
+        options:
+          - internal
+          - alpha
+          - beta
+          - production
+      upload_binary:
+        description: "Upload App Bundle (AAB)"
+        required: true
+        type: boolean
+        default: true
+      upload_assets:
+        description: "Upload screenshots & metadata"
+        required: true
+        type: boolean
+        default: false
+      in_app_update_level:
+        description: "In-app update level"
+        required: true
+        type: choice
+        default: none
+        options:
+          - none
+          - feature
+          - bugfix
+          - hotfix
+      tag_repository:
+        description: "Tag the repository"
+        required: true
+        type: boolean
+        default: false
+
+jobs:
+   build:
+
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+    - uses: actions/checkout@v4
+    - uses: ./.github/actions/setup-jdk-gradle
+
+    - name: 🔓 Decrypt secrets
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+      run: ./_ci/decrypt_secrets.sh
+
+    - name: 🔨 Build Android App
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
+        CI_BUILD_NUMBER: ${{ github.run_number }}
+      run: |
+            ./gradlew --no-daemon --parallel :h2go-app:bundleRelease \
+              -Pci=true \
+              -Pplaystore.keystore.file="${PWD}/_ci/h2go.keystore" \
+              -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
+              -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"
+
+    # allows Bundler gem installation (used for fastlane gem)
+    - name: 💎 Setup Ruby 3.2
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.2
+        bundler-cache: true
+
+    - name: 🚀 Play Store publish
+      run: |
+            sudo apt -y install libxml2-utils
+            ./_ci/playstore.sh "${{ inputs.track }}" ${{ inputs.upload_binary }} ${{ inputs.upload_assets }} "${{ inputs.in_app_update_level }}"
+
+    - name: 📌 Tag Release
+      if:  ${{ inputs.tag_repository }} 
+      run: |
+            sudo snap install yq
+            version_name=$(yq e '.versions.h2go' gradle/libs.versions.toml)
+            version_code=${{ github.run_number }}
+            git config user.name 'Github Actions'
+            git config user.email 'opatry-h2go-app@users.noreply.github.com'
+            git tag -a v${version_name}.${version_code}-playstore -m "🚀 Published version ${version_name}.${version_code} on Play Store"
+            git push origin --tags
