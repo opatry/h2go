@@ -32,3 +32,7 @@ local.properties
 .kotlin/sessions/
 
 bundletool-*.jar
+
+_ci/api-*.json
+_ci/*.keystore
+

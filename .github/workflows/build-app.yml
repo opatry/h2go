@@ -1,5 +1,12 @@
 on:
   workflow_call:
+    secrets:
+      PLAYSTORE_SECRET_PASSPHRASE:
+        required: true
+      KEYSTORE_PASSWORD:
+        required: true
+      KEYSTORE_KEY_PASSWORD:
+        required: true
 
 jobs:
   build:
@@ -10,7 +17,19 @@ jobs:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/setup-jdk-gradle
 
+    - name: 🔓 Decrypt secrets
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+      run: ./_ci/decrypt_secrets.sh
+
     - name: 📱 Android App
+      env:
+        PLAYSTORE_SECRET_PASSPHRASE: ${{ secrets.PLAYSTORE_SECRET_PASSPHRASE }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEYSTORE_KEY_PASSWORD: ${{ secrets.KEYSTORE_KEY_PASSWORD }}
       run: |
           ./gradlew --no-daemon --parallel :h2go-app:assembleRelease \
-            -Pci=true
+            -Pci=true \
+            -Pplaystore.keystore.file="${PWD}/_ci/h2go.keystore" \
+            -Pplaystore.keystore.password="${KEYSTORE_PASSWORD}" \
+            -Pplaystore.keystore.key_password="${KEYSTORE_KEY_PASSWORD}"

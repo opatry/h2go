@@ -2,11 +2,19 @@
 [![Build & Test](https://github.com/opatry/h2go/actions/workflows/build.yml/badge.svg)](https://github.com/opatry/h2go/actions/workflows/build.yml)
 ![Coverage 98%](https://img.shields.io/badge/Coverage-98%25-rgb%2860%2C179%2C113%29)
 
+---
+
+<div align="center">
+<img src="fastlane/metadata/store/en-US/images/featureGraphic.png" width="500">
+</div>
+
 # H₂Go! 💧
 
 **Your minimalist companion for daily water tracking.**
 
 Built with a modern Android stack, **H₂Go!** is designed to be simple, fast, and supportive. Just one tap to log your water, right from the app or your home screen.
+
+[![H₂Go! on Play Store](assets/GetItOnGooglePlay_Badge_Web_color_English.png)](https://play.google.com/store/apps/details?id=net.opatry.h2go)
 
 ## ✨ Key Features
 
