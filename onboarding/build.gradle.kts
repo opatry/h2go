@@ -68,4 +68,5 @@ dependencies {
     testImplementation(libs.junit)
     testImplementation(libs.assertj.core)
     testImplementation(libs.bundles.mockito)
+    testImplementation(libs.koin.test)
 }
