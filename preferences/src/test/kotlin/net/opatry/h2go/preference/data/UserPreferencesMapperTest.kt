@@ -53,6 +53,7 @@ class UserPreferencesMapperTest {
         volumeUnitStr: String,
         areNotificationsEnabled: Boolean
     ) {
+        // Given
         val entity = UserPreferencesEntity(
             dailyTarget = 2000,
             glassVolume = 250,
@@ -61,8 +62,10 @@ class UserPreferencesMapperTest {
             notificationFrequencyInHours = 2
         )
 
+        // When
         val result = mapper.toDomain(entity)
 
+        // Then
         assertThat(result.dailyTarget).isEqualTo(2000)
         assertThat(result.glassVolume).isEqualTo(250)
         assertThat(result.volumeUnit).isEqualTo(volumeUnit)
@@ -70,13 +73,14 @@ class UserPreferencesMapperTest {
         assertThat(result.notificationFrequencyInHours).isEqualTo(2)
     }
 
-    @ParameterizedTest(name = "given volumeUnit=${0} and areNotificationsEnabled=${1}, then should map correctly")
+    @ParameterizedTest(name = "given volumeUnit={0} and areNotificationsEnabled={1}, then should map correctly")
     @MethodSource("preferencesParams")
     fun `toEntity should map correctly`(
         volumeUnit: VolumeUnit,
         volumeUnitStr: String,
         areNotificationsEnabled: Boolean
     ) {
+        // Given
         val preferences = UserPreferences(
             dailyTarget = 1500,
             glassVolume = 300,
@@ -85,8 +89,10 @@ class UserPreferencesMapperTest {
             notificationFrequencyInHours = 3,
         )
 
+        // When
         val result = mapper.toEntity(preferences)
 
+        // Then
         assertThat(result.dailyTarget).isEqualTo(1500)
         assertThat(result.glassVolume).isEqualTo(300)
         assertThat(result.volumeUnit).isEqualTo(volumeUnitStr)
