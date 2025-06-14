@@ -154,7 +154,7 @@ else
   check_in_app_level "${update_level}"
 fi
 
-aab="${origin}/../tasks-app-android/build/outputs/bundle/${build_type}/tasks-app-android-${build_type}.aab"
+aab="${origin}/../h2go-app/build/outputs/bundle/${build_type}/h2go-app-${build_type}.aab"
 
 if [ -z "${CI:-}" ] && [ "${upload_binary}" = true ]; then
   warn "Ensure you have properly build an up to date version of '${BLUE}${build_type}${RESET}' App Bundle (AAB)."
