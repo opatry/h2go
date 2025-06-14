@@ -7,6 +7,8 @@ title: H₂Go! 💧
 
 Built with a modern Android stack, **H₂Go!** is designed to be simple, fast, and supportive. Just one tap to log your water, right from the app or your home screen.
 
+[![H₂Go! on Play Store](assets/GetItOnGooglePlay_Badge_Web_color_English.png)](https://play.google.com/store/apps/details?id=net.opatry.h2go)
+
 ## ✨ Key Features
 
 - **1-Tap Logging:** Add water instantly from the app or home screen widget.
