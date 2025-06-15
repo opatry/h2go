@@ -73,7 +73,7 @@ fun WelcomeScreen(
 }
 
 @Composable
-fun WelcomeScreen(
+internal fun WelcomeScreen(
     onContinueClicked: () -> Unit,
 ) {
     Column(
