@@ -29,6 +29,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import kotlin.time.Duration.Companion.hours
 
 class UserPreferencesMapperTest {
 
@@ -53,6 +54,7 @@ class UserPreferencesMapperTest {
         volumeUnitStr: String,
         areNotificationsEnabled: Boolean
     ) {
+        // Given
         val entity = UserPreferencesEntity(
             dailyTarget = 2000,
             glassVolume = 250,
@@ -61,32 +63,37 @@ class UserPreferencesMapperTest {
             notificationFrequencyInHours = 2
         )
 
+        // When
         val result = mapper.toDomain(entity)
 
+        // Then
         assertThat(result.dailyTarget).isEqualTo(2000)
         assertThat(result.glassVolume).isEqualTo(250)
         assertThat(result.volumeUnit).isEqualTo(volumeUnit)
         assertThat(result.areNotificationsEnabled).isEqualTo(areNotificationsEnabled)
-        assertThat(result.notificationFrequencyInHours).isEqualTo(2)
+        assertThat(result.notificationsFrequency).isEqualTo(2.hours)
     }
 
-    @ParameterizedTest(name = "given volumeUnit=${0} and areNotificationsEnabled=${1}, then should map correctly")
+    @ParameterizedTest(name = "given volumeUnit={0} and areNotificationsEnabled={1}, then should map correctly")
     @MethodSource("preferencesParams")
     fun `toEntity should map correctly`(
         volumeUnit: VolumeUnit,
         volumeUnitStr: String,
         areNotificationsEnabled: Boolean
     ) {
+        // Given
         val preferences = UserPreferences(
             dailyTarget = 1500,
             glassVolume = 300,
             volumeUnit = volumeUnit,
             areNotificationsEnabled = areNotificationsEnabled,
-            notificationFrequencyInHours = 3,
+            notificationsFrequency = 3.hours,
         )
 
+        // When
         val result = mapper.toEntity(preferences)
 
+        // Then
         assertThat(result.dailyTarget).isEqualTo(1500)
         assertThat(result.glassVolume).isEqualTo(300)
         assertThat(result.volumeUnit).isEqualTo(volumeUnitStr)

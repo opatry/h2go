@@ -25,6 +25,7 @@ package net.opatry.h2go.preference.data
 import net.opatry.h2go.preference.data.entity.UserPreferencesEntity
 import net.opatry.h2go.preference.domain.UserPreferences
 import net.opatry.h2go.preference.domain.VolumeUnit
+import kotlin.time.Duration.Companion.hours
 
 class UserPreferencesMapper {
 
@@ -33,7 +34,7 @@ class UserPreferencesMapper {
         glassVolume = entity.glassVolume,
         volumeUnit = VolumeUnit.valueOf(entity.volumeUnit),
         areNotificationsEnabled = entity.areNotificationsEnabled,
-        notificationFrequencyInHours = entity.notificationFrequencyInHours,
+        notificationsFrequency = entity.notificationFrequencyInHours.hours,
     )
 
     fun toEntity(preferences: UserPreferences) = UserPreferencesEntity(
@@ -41,6 +42,6 @@ class UserPreferencesMapper {
         glassVolume = preferences.glassVolume,
         volumeUnit = preferences.volumeUnit.name,
         areNotificationsEnabled = preferences.areNotificationsEnabled,
-        notificationFrequencyInHours = preferences.notificationFrequencyInHours,
+        notificationFrequencyInHours = preferences.notificationsFrequency.inWholeHours.toInt(),
     )
 }

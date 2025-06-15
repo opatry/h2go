@@ -54,5 +54,5 @@ dependencies {
     testImplementation(libs.androidx.room.runtime.jvm)
     testImplementation(libs.androidx.sqlite.bundled.jvm)
     testRuntimeOnly(libs.androidx.sqlite.jvm)
-    implementation(libs.koin.test)
+    testImplementation(libs.koin.test)
 }

@@ -105,6 +105,7 @@ android {
 
 dependencies {
     implementation(projects.preferences)
+    implementation(projects.onboarding)
 
     implementation(libs.kotlinx.coroutines.android) {
         because("requires Dispatchers.Main & co at runtime for Android")
@@ -120,7 +121,9 @@ dependencies {
 
     implementation(libs.androidx.activity.compose)
 
-    implementation(libs.androidx.material3)
+    implementation(libs.androidx.navigation.compose)
+
+    implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.appcompat)
 
     implementation(libs.kotlinx.serialization)
@@ -133,8 +136,13 @@ dependencies {
     implementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    androidTestImplementation(projects.androidTestUtil)
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.runner)
+
+    androidTestImplementation(libs.androidx.navigation.testing)
+    androidTestImplementation(libs.junit4)
+    androidTestImplementation(libs.assertj.core)
 
     testImplementation(libs.junit)
     testImplementation(libs.assertj.core)

@@ -23,6 +23,7 @@
 package net.opatry.h2go.app.di
 
 import net.opatry.h2go.app.data.di.databaseModule
+import net.opatry.h2go.onboarding.di.onboardingModule
 import net.opatry.h2go.preference.di.preferencesModule
 import org.junit.jupiter.api.Test
 import org.koin.core.annotation.KoinExperimentalAPI
@@ -38,6 +39,7 @@ class H2GoDITest {
             includes(
                 databaseModule,
                 preferencesModule,
+                onboardingModule,
             )
         }
         allModules.verify()

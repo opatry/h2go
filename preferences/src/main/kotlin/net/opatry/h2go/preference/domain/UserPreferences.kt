@@ -22,10 +22,12 @@
 
 package net.opatry.h2go.preference.domain
 
+import kotlin.time.Duration
+
 data class UserPreferences(
     val dailyTarget: Int,
     val glassVolume: Int,
     val volumeUnit: VolumeUnit,
     val areNotificationsEnabled: Boolean,
-    val notificationFrequencyInHours: Int,
+    val notificationsFrequency: Duration,
 )
