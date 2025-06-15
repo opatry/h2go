@@ -102,6 +102,33 @@ kover {
     }
 }
 
+allprojects {
+    project.afterEvaluate {
+        apply(plugin = libs.plugins.detekt.get().pluginId)
+        detekt {
+            config.setFrom("$rootDir/detekt.yml")
+            buildUponDefaultConfig = true
+            allRules = true
+            parallel = true
+            ignoreFailures = false
+        }
+
+        dependencies {
+            detektPlugins(projects.detektRules)
+        }
+    }
+
+    tasks.withType<Detekt> { dependsOn(":detekt-rules:assemble") }
+    tasks.withType<Detekt>().configureEach {
+        reports {
+            txt.required.set(true)
+            html.required.set(false)
+            xml.required.set(false)
+            sarif.required.set(false)
+        }
+    }
+}
+
 subprojects {
     tasks {
         findByName("test") ?: return@tasks
@@ -128,25 +155,6 @@ subprojects {
                     }
                 }
             }
-        }
-    }
-
-    project.afterEvaluate {
-        apply(plugin = libs.plugins.detekt.get().pluginId)
-        detekt {
-            config.setFrom("$rootDir/detekt.yml")
-            buildUponDefaultConfig = true
-            allRules = false
-            parallel = true
-        }
-    }
-
-    tasks.withType<Detekt>().configureEach {
-        reports {
-            txt.required.set(true)
-            html.required.set(false)
-            xml.required.set(false)
-            sarif.required.set(false)
         }
     }
 

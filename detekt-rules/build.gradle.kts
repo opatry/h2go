@@ -20,31 +20,13 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-pluginManagement {
-    repositories {
-        google()
-        mavenCentral()
-        gradlePluginPortal()
-    }
+plugins {
+    kotlin("jvm")
 }
 
-dependencyResolutionManagement {
-    @Suppress("UnstableApiUsage")
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    @Suppress("UnstableApiUsage")
-    repositories {
-        google()
-        mavenCentral()
-    }
+dependencies {
+    compileOnly(libs.detekt.api)
+    testImplementation(libs.detekt.test)
+    testImplementation(libs.junit)
+    testImplementation(libs.assertj.core)
 }
-
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
-
-rootProject.name = "H2Go"
-
-include(":detekt-rules")
-include(":h2go-app")
-include(":preferences")
-include(":onboarding")
-include(":android-test-util")
-include(":test-util")

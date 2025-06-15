@@ -32,3 +32,8 @@ complexity:
 performance:
   SpreadOperator:
     active: false
+
+h2go-rules:
+  active: true
+  CleanArchitectureBoundaryRule:
+    active: true
