@@ -1,0 +1,165 @@
+---
+description: When implementing a new feature, follow the architecture guidelines of clean architecture.
+globs: 
+alwaysApply: false
+---
+# Clean Architecture Conventions
+
+## Project Structure
+
+The project uses a multi-module Gradle setup where macro features are split into individual Gradle modules. Within modules, there might be several sub-features.
+
+## Package Structure Guidelines
+
+When implementing a new feature, enforce the following package structure:
+
+```
+myfeature/src/main/kotlin/net/opatry/h2go/myfeature/
+├── presentation
+├── navigation
+├── di
+├── ui
+│   ├── components
+│   └── screens
+├── domain
+│   └── model
+└── data
+    └── entity
+```
+
+## Layer Dependencies & Rules
+
+### Domain Layer (Core Business Logic)
+- **Models**: Pure Kotlin data classes with no Android dependencies
+- **Repository Interfaces**: Define contracts using domain models only
+- **Use Cases**: Contain business logic, depend on repository interfaces
+- **NO**: Android framework dependencies, data layer implementations
+
+### Data Layer (Data Access)
+- **Repository Implementations**: Implement domain repository interfaces
+- **Data Sources**: Handle local/remote data access (Room, Http, etc.)
+- **Mappers**: Convert between data models and domain models
+- **Models**: Data transfer objects (DTOs) for API, Entities for DB
+
+### Presentation Layer
+- **ViewModels**: Use domain use cases, expose UI state
+- **NO**: Direct data or ui package imports
+
+### UI Layer
+- **UI Components**: Compose screens and components
+- **Navigation**: Handle screen navigation
+- **NO**: Direct domain or data package imports
+
+## Implementation Guidelines
+
+### Repository Pattern
+```kotlin
+// in domain package
+interface UserRepository {
+    suspend fun getUser(id: String): User // Domain model
+    suspend fun saveUser(user: User)
+}
+
+// in data package
+// DI provides dependencies 
+class UserRepositoryImpl(
+    private val remoteDataSource: UserRemoteDataSource,
+    private val localDataSource: UserLocalDataSource,
+    private val mapper: UserMapper
+) : UserRepository {
+    
+    override suspend fun getUser(id: String): User {
+        val userDto = remoteDataSource.getUser(id)
+        return mapper.toDomain(userDto)
+    }
+}
+```
+
+### Use Case Pattern
+```kotlin
+// in domain package
+class GetUserProfileUseCase(
+    private val userRepository: UserRepository
+) {
+    suspend operator fun invoke(userId: String): Result<User> {
+        // maybe add business logic around
+        return runCatching {
+          userRepository.getUser(userId)
+        }
+    }
+}
+```
+
+### ViewModel Pattern
+```kotlin
+// in presentation package
+class UserProfileViewModel(
+    private val getUserProfileUseCase: GetUserProfileUseCase
+) : ViewModel() {
+    
+    private val _uiState = MutableStateFlow(UserProfileUiState())
+    val uiState = _uiState.asStateFlow()
+
+    // DO NOT bootstrap UI state update using `init {}` to ease unit tests
+
+    // emit events like message for snackbar, alert, navigation
+    // in events, not as states
+    private val _eventsFlow = MutableSharedFlow<UserProfileEvent>()
+    val eventsFlow = _uiState.asSharedFlow()
+    
+    fun loadUserProfile(userId: String) {
+        // public ViewModel APIs starts coroutines in viewModelScope
+        // to ensure main thread safety
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+            getUserProfileUseCase(userId)
+                .onSuccess { user ->
+                    _uiState.update {
+                        it.copy(
+                            user = user,
+                            isLoading = false,
+                        )
+                    }
+                }
+                .onFailure { error ->
+                    _uiState.update { it.copy(isLoading = true) }
+                    _eventsFlow.emit(UserProfileEvent.Error(error))
+                }
+        }
+    }
+}
+```
+
+## Detekt Rules Compliance
+
+### Dependency Rules
+- Presentation layer CANNOT import from data or domain packages directly
+- Domain layer CANNOT import from data or presentation packages
+- Data layer CAN import from domain (for interfaces and models)
+
+### Model Conversion
+- Repository implementations MUST convert between data models and domain models
+- Use dedicated mapper classes for model conversion
+- Never expose data layer models to domain or presentation layers
+
+## Testing Strategy
+
+### Unit Tests
+- **Domain**: Test use cases with mocked repositories
+- **Data**: Test repository implementations with mocked data sources
+- **Presentation**: Test ViewModels with mocked use cases
+
+## Common Anti-Patterns to Avoid
+
+❌ **DON'T**:
+- Import data models in presentation layer
+- Put business logic in ViewModels
+- Access data sources directly from use cases
+- Mix Android dependencies in domain layer
+- Create God classes that handle multiple responsibilities
+
+✅ **DO**:
+- Keep layers separated with clear boundaries
+- Convert models at layer boundaries
+- Keep domain layer pure Kotlin
+- Follow single responsibility principle
