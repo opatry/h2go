@@ -61,7 +61,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
 
     debugImplementation(libs.androidx.ui.tooling)
-    debugImplementation(libs.androidx.ui.test.manifest)
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     testImplementation(projects.testUtil)
     testImplementation(libs.kotlinx.coroutines.test)
