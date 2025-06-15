@@ -75,4 +75,4 @@ class CheckUserPreferencesExistUseCaseTest {
         // Then
         assertThat(result).isFalse()
     }
-} 
+}

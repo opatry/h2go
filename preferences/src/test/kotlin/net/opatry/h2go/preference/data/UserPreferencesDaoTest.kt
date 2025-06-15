@@ -165,4 +165,4 @@ class UserPreferencesDaoTest {
         val resultingPreferences = dao.getUserPreferences().first()
         assertThat(resultingPreferences).isEqualTo(defaultPreferences)
     }
-} 
+}

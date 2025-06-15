@@ -133,4 +133,4 @@ class UserPreferencesRepositoryTest {
         val resultingPreferences = repository.getUserPreferences().first()
         assertThat(resultingPreferences).isEqualTo(defaultPreferences)
     }
-} 
+}

@@ -11,9 +11,11 @@ import org.junit.jupiter.api.extension.ExtensionContext
 
 @ExperimentalCoroutinesApi
 class MainDispatcherExtension : BeforeAllCallback, AfterAllCallback {
+
     override fun beforeAll(context: ExtensionContext?) {
         Dispatchers.setMain(StandardTestDispatcher())
     }
+
     override fun afterAll(context: ExtensionContext?) {
         Dispatchers.resetMain()
     }

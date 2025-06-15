@@ -117,7 +117,7 @@ fun PreferencesScreen(
 }
 
 @Composable
-fun PreferencesScreen(
+internal fun PreferencesScreen(
     uiState: PreferencesUiState,
     onVolumeUnitSelected: (UserVolumeUnit) -> Unit,
     onNotificationsEnabledChanged: (Boolean) -> Unit,
@@ -294,4 +294,4 @@ private fun PreferencesScreenPreview(
             )
         }
     }
-} 
+}

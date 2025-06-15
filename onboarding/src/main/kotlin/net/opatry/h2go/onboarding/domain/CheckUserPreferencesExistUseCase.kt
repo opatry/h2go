@@ -29,4 +29,4 @@ class CheckUserPreferencesExistUseCase(
     private val userPreferencesRepository: UserPreferencesRepository,
 ) {
     suspend operator fun invoke(): Boolean = userPreferencesRepository.getUserPreferences().firstOrNull() != null
-} 
+}

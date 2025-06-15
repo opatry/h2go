@@ -50,4 +50,4 @@ class SaveInitialUserPreferencesUseCase(
         )
         userPreferencesRepository.updateUserPreferences(preferences)
     }
-} 
+}

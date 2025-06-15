@@ -42,8 +42,9 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 rootProject.name = "H2Go"
 
+include(":detekt-rules")
 include(":h2go-app")
-include(":preferences") 
+include(":preferences")
 include(":onboarding")
 include(":android-test-util")
 include(":test-util")
