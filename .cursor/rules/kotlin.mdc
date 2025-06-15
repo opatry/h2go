@@ -1,0 +1,54 @@
+---
+description: 
+globs: *.kt
+alwaysApply: false
+---
+# Kotlin Conventions
+
+- Prefer immutability when possible.
+- Use `data class` for models.
+- Prefer `sealed interface` over `sealed class` when possible and relevant.
+- Nest `sealed interface` implementations within the interface.
+- Within `sealed interface`, use `data object` instead of simple `object`.
+
+```kotlin
+sealed interface Xxx {
+    data object Something : Xxx
+    data class Blah(val x: String) : Xxx
+}
+```
+
+For enums or `sealed interface`/`class`, when using `when`, prefer exhaustive matching instead of `else` fallback.
+This helps with refactoring and code evolution.
+
+When updating `Flow`, use `flow.update { it.copy(...) }` when possible and relevant.
+
+When a function has several parameters, prefer multi-line formatting when the line becomes too long.
+When doing so, use a trailing comma for the last parameter to ease future code evolution and parameter reordering.
+
+```kotlin
+// Fine on one line if not too many parameters
+fun someFunction(param: String, param2: Int)
+
+// Put on separate lines when too many parameters (with trailing comma)
+fun someFunction(
+    param: String,
+    param2: Int,
+    param3: MySuperType,
+)
+
+fun callSite(param: String) {
+    // Fine when not ambiguous with not too many parameters
+    someFunction(param, 42)
+    
+    // Use named parameters when there's ambiguity
+    someFunction(param = "something", param2 = 42)
+    
+    // Put on separate lines when too many parameters (with trailing comma)
+    someFunction(
+        param = "something",
+        param2 = 42,
+        param3 = myObject,
+    )
+}
+```

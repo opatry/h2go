@@ -1,0 +1,178 @@
+---
+description: Project test tech stack & conventions.
+globs: *Test.kt
+alwaysApply: false
+---
+## Test stack
+
+When writing unit tests, remember that the project is fully written in Kotlin and uses:
+
+- [JUnit5](mdc:https:/github.com/junit-team/junit5) (aka Jupiter) runner & `@Test` annotation
+- [AssertJ](mdc:https:/github.com/assertj/assertj) assertion library (not JUnit's assertions)
+- [Mockito](mdc:https:/github.com/mockito/mockito) with [Mockito Kotlin](mdc:https:/github.com/mockito/mockito-kotlin)
+- [Kotlin coroutines tests](mdc:https:/kotlinlang.org/api/kotlinx.coroutines/kotlinx-coroutines-test)
+- [Compose UI tests](mdc:https:/developer.android.com/develop/ui/compose/testing)
+
+Don't assume that because it's Kotlin, I want [MockK](mdc:https:/github.com/mockk/mockk/releases) or [Turbine](mdc:https:/github.com/cashapp/turbine) - I don't!
+
+There is a JUnit5 dependency already defined in `libs.versions.toml`.
+You can also use the AssertJ Core library dependency when needed.
+There is also a Mockito bundle to use in `build.gradle.kts` if not already added.
+
+```kotlin
+testImplementation(libs.junit)
+testImplementation(libs.assertj.core)
+testImplementation(libs.bundles.mockito)
+```
+
+For UI Tests, use the UI Test manifest dependency in `debugImplementation` alongside the UI Test dependency.
+
+```kotlin
+testImplementation(libs.androidx.compose.ui.test)
+debugImplementation(libs.androidx.compose.ui.test.manifest)
+```
+
+## Test structure & formalism
+
+Unit tests targeting Jvm are put in `src/test/java`.
+Instrumented tests targeting Android are put in `src/androidTest/java`.
+
+All tests follow the ["Given/When/Then"](mdc:https:/martinfowler.com/bliki/GivenWhenThen.html) formalism.
+
+- It should apply to unit test function names using Kotlin backticks
+  - use lowercase `given`, `when`, `then`
+  - separate with `,` 
+```kotlin
+fun `given A, when B, then C should D`() = runTest {}
+```
+- Test body structure should use `// Given`, `// When`, `// Then` sections
+```kotlin
+@Test
+fun `given A, when B, then C should D`() = runTest {
+    // Given
+    ... A
+
+    // When
+    ... B
+
+    // Then
+    assertThat(C). ... D
+}
+```
+
+When it comes to `ViewModel` tests, rely on `MainDispatcherExtension` defined in the `:test-utils` module.
+When calling `ViewModel` functions, ensure you call `advanceUntilIdle()` in the `Then` section to allow asserting before and after the view model's function coroutine is executed.
+
+The view model test class should opt-in for `ExperimentalTestApi` and `ExperimentalCoroutinesApi`.
+
+```kotlin
+@OptIn(
+    ExperimentalTestApi::class,
+    ExperimentalCoroutinesApi::class,
+)
+class MyViewModelTest { ... }
+```
+
+## Mocking
+
+When it comes to mocking, prefer `@InjectMocks` when possible and avoid `@BeforeEach` when not needed.
+
+For the class under test, use member properties for mocks and the class under test.
+When needing mock objects within tests, use `mock<Type>()`.
+
+Use Mockito Kotlin `given` instead of regular Mockito `when`.
+
+```kotlin
+val mockedObject = mock<Type>()
+```
+
+If reusing the variable is not needed, inline it and let type inference do its job.
+
+```kotlin
+given(
+    mockedObject.call(
+        param = mock(),
+        param2 = mock(),
+    )
+)
+```
+
+## Tests relying on database
+
+Even if the code is based on Room, tests can run on Jvm (since Room supports KMP & Jvm/Desktop targets in particular).
+Keep tests relying on the database in `src/test` and take examples from tests made in `preferences/src/test/kotlin/net/opatry/h2go/preference/data`.
+
+## Parameterized tests
+
+When relevant, use parameterized tests to share test logic that only depends on given data & expected results.
+
+```kotlin
+@ParameterizedTest(name = "given {0}, when XXX, then result should be {1}")
+@MethodSource("saveErrorTestCases")
+fun doSomething(
+    // Given
+    givenData: SomeData,
+    expectedResult: SomeResult,
+) = runTest {
+    // When
+    val result = obj.doSomething(givenData)
+
+    // Then
+    assertThat(result).isEqualTo(expectedResult)
+}
+```
+
+## UI tests
+
+The UI is written in Jetpack Compose.
+When it comes to UI components not relying on navigation, DI, or ViewModel, they are easily unit tested.
+Prefer using `runComposeUiTest` for each test (as a replacement for `runTest`) over the `createComposeRule` rule.
+We are writing JUnit5 tests anyway, so there are no rules.
+
+The test class should opt-in for `ExperimentalTestApi` and `ExperimentalCoroutinesApi`.
+
+```kotlin
+@OptIn(
+    ExperimentalTestApi::class,
+    ExperimentalCoroutinesApi::class,
+)
+class MyUiComponentTest {
+
+    @Test
+    fun `given X, when Y, then should Z`() = runComposeUiTest {
+        // Given
+        setContent {
+            MyUiComponent()
+        }
+
+        // When/Then
+        onNodeWithText("Some label")
+            .assertIsDisplayed()
+
+        onNodeWithTag(MY_TEST_TAG)
+            .assertIsDisplayed()
+            .assertTextEquals("A message")
+
+        onNodeWithTag(MY_OTHER_TEST_TAG)
+            .assertIsDisplayed()
+            .assertTextEquals("Something else")
+    }
+}
+```
+
+All these tests can be written in `src/test` for Jvm execution.
+
+## DI in tests
+
+If DI is involved in the tested code, you can use `KoinTestRule` to control the modules to use and maybe override a production module with a test one.
+
+## Test coverage
+
+We aim for a very high coverage rate. When running tests, ensure coverage is still high or add tests to cover missing parts.
+
+You can use the following command to check results:
+```bash
+./gradlew koverXmlReportCoverage koverLogCoverage koverVerifyCoverage
+```
+
+When adding a new module with tests, don't forget to add this module to the root `build.gradle.kts` in `koverProjects`.

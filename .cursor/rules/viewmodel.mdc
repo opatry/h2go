@@ -1,0 +1,114 @@
+---
+description: 
+globs: *ViewModel.kt
+alwaysApply: false
+---
+# ViewModel Implementation Rules
+
+`ViewModel` belongs to the `presentation` package.
+
+When implementing and testing `ViewModel`, follow the rules defined in [clean-arch-feature.mdc](mdc:.cursor/rules/clean-arch-feature.mdc) and [unit-test-convention.mdc](mdc:.cursor/rules/unit-test-convention.mdc), while also adhering to these specific guidelines:
+
+## Dependencies and Mapping
+
+- Inject use case dependencies from the domain layer
+- If complex mapping between domain and presentation models is required, extract it into a dedicated mapper that is also injected
+- Presentation models should never leak into the domain layer; convert them before passing to domain components
+
+## State Initialization
+
+- **Do not** use `init {}` blocks to bootstrap `_uiState` updates
+- Define an `Idle` or `Loading` `UiState` as the default value
+- Expose a `loadXXX()` function to let the UI layer (or unit tests) decide when to bootstrap
+
+## UiState Design
+
+- `UiState` should be sealed interfaces modeling various screen states
+- Design states to represent the complete screen state at any given moment
+
+```kotlin
+sealed interface UiState {
+    data object Idle : UiState
+    data object Loading : UiState
+    data class Ready(val data: String) : UiState
+}
+```
+
+## API Naming Conventions
+
+- For public APIs, use action verbs and avoid `onXXX` naming (reserved for callbacks)
+- Example: `loadUserProfile()`, `refreshData()`, `submitForm()`
+
+## Internal Function Guidelines
+
+- Internal and private APIs should avoid calling public APIs that start coroutines
+- When calling multiple functions, avoid making `UiState` updates from several places
+- Keep the sequence of updates clear and isolated to maintain predictable state flow
+
+## Event Handling
+
+- Emit one-time events (like snackbar messages, alerts, navigation) through events, not as states
+- Use `SharedFlow` for events and `StateFlow` for persistent state
+
+## Example Implementation
+
+```kotlin
+// in presentation package
+class UserProfileViewModel(
+    private val getUserProfileUseCase: GetUserProfileUseCase,
+    private val userMapper: UserMapper,
+) : ViewModel() {
+    
+    private val _uiState = MutableStateFlow(UserProfileUiState.Idle)
+    val uiState = _uiState.asStateFlow()
+
+    // DO NOT bootstrap UI state updates using `init {}` to ease unit testing
+
+    // Emit events like messages for snackbar, alerts, navigation
+    // in events, not as states
+    private val _eventsFlow = MutableSharedFlow<UserProfileEvent>()
+    val eventsFlow = _eventsFlow.asSharedFlow()
+    
+    fun loadUserProfile(userId: String) {
+        // Public ViewModel APIs start coroutines in viewModelScope
+        // to ensure main thread safety
+        viewModelScope.launch {
+            _uiState.update { UserProfileUiState.Loading }
+            
+            getUserProfileUseCase(userId)
+                .onSuccess { domainUser ->
+                    val presentationUser = userMapper.toPresentationModel(domainUser)
+                    _uiState.update {
+                        UserProfileUiState.Ready(user = presentationUser)
+                    }
+                }
+                .onFailure { error ->
+                    _uiState.update { UserProfileUiState.Idle }
+                    _eventsFlow.emit(UserProfileEvent.Error(error.message))
+                }
+        }
+    }
+    
+    fun retryLoading(userId: String) {
+        loadUserProfile(userId)
+    }
+}
+
+sealed interface UserProfileUiState {
+    data object Idle : UserProfileUiState
+    data object Loading : UserProfileUiState
+    data class Ready(val user: UserPresentationModel) : UserProfileUiState
+}
+
+sealed interface UserProfileEvent {
+    data class Error(val message: String) : UserProfileEvent
+    data object NavigateBack : UserProfileEvent
+}
+```
+## Key Principles Summary
+
+1. **Clear separation of concerns**: Domain logic stays in use cases, presentation logic in ViewModels
+2. **Predictable state management**: Single source of truth with clear state transitions
+3. **Testability**: Avoid `init {}` bootstrapping and prefer explicit function calls
+4. **Thread safety**: Use `viewModelScope` for coroutines in public APIs
+5. **Event vs State distinction**: Use events for one-time actions, states for persistent UI data

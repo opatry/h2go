@@ -1,0 +1,77 @@
+---
+description: 
+globs: **/ui/**/*.kt
+alwaysApply: false
+---
+# Compose UI Guidelines
+
+Compose UI code should be stored in a `ui` package within the feature it belongs to.
+
+```
+myfeature/src/main/kotlin/net/opatry/h2go/myfeature/
+├── di
+├── domain
+├── navigation
+├── presentation
+└── ui
+    ├── component
+    └── screen
+```
+
+Main screen entry points that rely on injected objects complex to use in tests or previews (like view models) should be small and delegate to another composable that hoists data retrieved from the view model.
+This makes the internal version compatible with previews and UI tests on the Jvm.
+
+Here's a typical example of a screen entry point:
+
+```kotlin
+@Composable
+fun MyScreen(
+    viewModel: MyViewModel = koinViewModel(),
+    onNavigateToXXX: () -> Unit,
+) {
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    MyScreen(uiState, onNavigateToXXX)
+}
+
+@Composable
+internal fun MyScreen(
+    uiState: MyUiState,
+    onNavigateToXXX: () -> Unit,
+) {
+  ...
+}
+
+private class MyUiStatePreviewParameterProvider : PreviewParameterProvider<PreferencesUiState> {
+    override val values: Sequence<MyUiState>
+        get() = sequenceOf(
+            MyUiState(
+                ... variant 1
+            ),
+            MyUiState(
+                ... variant 2
+            ),
+            MyUiState(
+                ... variant 3
+            ),
+        )
+}
+
+@PreviewLightDark
+@Composable
+private fun MyScreenPreview(
+    @PreviewParameter(MyUiStatePreviewParameterProvider::class)
+    uiState: MyUiState
+) {
+    MaterialTheme {
+        Surface {
+            MyScreen(
+                uiState = uiState,
+                onNavigateToXXX = {},
+            )
+        }
+    }
+}
+```
+
+When unit testing of composables becomes too complex because the composable is too large, some UI components should be extracted as sub-composables in the `component` package of their feature.
