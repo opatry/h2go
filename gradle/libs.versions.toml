@@ -23,6 +23,7 @@ junit4 = "4.13.2"
 junit = "5.10.2"
 assertj = "3.27.3"
 kover = "0.9.1"
+detekt = "1.23.8"
 androidx-test-runner = "1.6.2"
 
 [libraries]
@@ -98,3 +99,4 @@ ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
 androidx-room = { id = "androidx.room", version.ref = "room" }
 about-libraries = { id = "com.mikepenz.aboutlibraries.plugin", version.ref = "about-libraries" }
 kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kover" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }

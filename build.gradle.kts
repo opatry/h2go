@@ -20,6 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
+import io.gitlab.arturbosch.detekt.Detekt
 import kotlinx.kover.gradle.plugin.dsl.CoverageUnit
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 
@@ -34,6 +35,7 @@ plugins {
     alias(libs.plugins.android.library) apply false
     alias(libs.plugins.about.libraries) apply false
     alias(libs.plugins.kover)
+    alias(libs.plugins.detekt)
 }
 
 val koverProjects = listOf(
@@ -126,6 +128,25 @@ subprojects {
                     }
                 }
             }
+        }
+    }
+
+    project.afterEvaluate {
+        apply(plugin = libs.plugins.detekt.get().pluginId)
+        detekt {
+            config.setFrom("$rootDir/detekt.yml")
+            buildUponDefaultConfig = true
+            allRules = false
+            parallel = true
+        }
+    }
+
+    tasks.withType<Detekt>().configureEach {
+        reports {
+            txt.required.set(true)
+            html.required.set(false)
+            xml.required.set(false)
+            sarif.required.set(false)
         }
     }
 

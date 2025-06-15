@@ -1,0 +1,34 @@
+processors:
+  active: true
+
+naming:
+  FunctionNaming:
+    active: true
+    ignoreAnnotated: ['Composable']
+    functionPattern: '^[a-z][A-Za-z0-9]*$'
+  MatchingDeclarationName:
+    active: false
+    excludes: ['**/ui/**'] 
+    ignoreAnnotated: ['Composable', 'VisibleForTesting']
+
+style:
+  UnusedPrivateMember:
+    active: true
+    ignoreAnnotated: ['Preview', 'PreviewLightDark']
+  MaxLineLength:
+    active: true
+    maxLineLength: 120
+    excludePackageStatements: true
+    excludeImportStatements: true
+    excludeCommentStatements: true
+    ignoreAnnotated: ['Test']
+
+complexity:
+  LongMethod:
+    active: true
+    ignoreAnnotated: ['Composable', 'Test']
+    threshold: 60
+
+performance:
+  SpreadOperator:
+    active: false
