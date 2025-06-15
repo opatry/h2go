@@ -20,33 +20,19 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.app.navigation
+package net.opatry.h2go.data.di
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import net.opatry.h2go.onboarding.navigation.OnboardingRoutes
-import net.opatry.h2go.onboarding.navigation.onboardingNavigation
+import androidx.room.Room
+import net.opatry.h2go.app.data.H2GoDatabase
+import org.koin.dsl.module
 
-@Composable
-fun MainNavigation(navController: NavHostController = rememberNavController()) {
-    NavHost(navController, startDestination = OnboardingRoutes) {
-        onboardingNavigation(navController) {
-            navController.navigate(MainRoutes.Main) {
-                popUpTo<OnboardingRoutes>()
-            }
-        }
-        composable<MainRoutes.Main> {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("MAIN SCREEN")
-            }
-        }
+val databaseTestModule = module {
+    single {
+        Room.inMemoryDatabaseBuilder<H2GoDatabase>(get())
+            .build()
+    }
+
+    single {
+        get<H2GoDatabase>().userPreferencesDao()
     }
 }

@@ -22,6 +22,7 @@
 
 package net.opatry.h2go.onboarding.ui
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -36,6 +37,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.PreviewLightDark
@@ -44,7 +46,13 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import net.opatry.h2go.onboarding.R
 import net.opatry.h2go.onboarding.presentation.WelcomeUiState
 import net.opatry.h2go.onboarding.presentation.WelcomeViewModel
+import net.opatry.h2go.onboarding.ui.WelcomeScreenTestTag.CONTINUE_BUTTON
 import org.koin.androidx.compose.koinViewModel
+
+@VisibleForTesting
+object WelcomeScreenTestTag {
+    const val CONTINUE_BUTTON = "WELCOME_CONTINUE_BUTTON"
+}
 
 @Composable
 fun WelcomeScreen(
@@ -87,7 +95,9 @@ fun WelcomeScreen(
         )
         Button(
             onClick = onContinueClicked,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(CONTINUE_BUTTON),
         ) {
             Text(text = stringResource(R.string.onboarding_welcome_continue_button))
         }

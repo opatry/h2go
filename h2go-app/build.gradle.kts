@@ -140,6 +140,10 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     androidTestImplementation(libs.androidx.test.runner)
 
+    androidTestImplementation(libs.androidx.navigation.testing)
+    androidTestImplementation(libs.junit4)
+    androidTestImplementation(libs.assertj.core)
+
     testImplementation(libs.junit)
     testImplementation(libs.assertj.core)
     testImplementation(libs.koin.test)

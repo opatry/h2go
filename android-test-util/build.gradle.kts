@@ -44,8 +44,10 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.coroutines.test)
     implementation(libs.junit4)
+    implementation(libs.assertj.core)
 
     implementation(libs.androidx.test.runner)
+    implementation(libs.androidx.navigation.testing)
 
     implementation(project.dependencies.platform(libs.koin.bom))
     implementation(libs.koin.android)

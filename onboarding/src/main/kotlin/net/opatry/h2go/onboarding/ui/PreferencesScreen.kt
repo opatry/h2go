@@ -22,6 +22,7 @@
 
 package net.opatry.h2go.onboarding.ui
 
+import androidx.annotation.VisibleForTesting
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -52,6 +53,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -65,9 +67,15 @@ import net.opatry.h2go.onboarding.presentation.PreferencesEvent
 import net.opatry.h2go.onboarding.presentation.PreferencesUiState
 import net.opatry.h2go.onboarding.presentation.PreferencesViewModel
 import net.opatry.h2go.onboarding.presentation.UserVolumeUnit
+import net.opatry.h2go.onboarding.ui.PreferencesScreenTestTag.SAVE_BUTTON
 import org.koin.androidx.compose.koinViewModel
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.hours
+
+@VisibleForTesting
+object PreferencesScreenTestTag {
+    const val SAVE_BUTTON = "PREFERENCES_SAVE_BUTTON"
+}
 
 @Composable
 fun PreferencesScreen(
@@ -225,16 +233,19 @@ fun PreferencesScreen(
 
         Button(
             onClick = onSaveClicked,
-            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag(SAVE_BUTTON),
             enabled = !uiState.isSaving,
         ) {
-            if (uiState.isSaving) {
-                CircularProgressIndicator(
-                    modifier = Modifier.padding(end = 8.dp),
-                    color = MaterialTheme.colorScheme.onPrimary,
-                )
+            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(text = stringResource(R.string.onboarding_preferences_save_button))
+                AnimatedVisibility(visible = uiState.isSaving) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onPrimary,
+                    )
+                }
             }
-            Text(text = stringResource(R.string.onboarding_preferences_save_button))
         }
     }
 }
