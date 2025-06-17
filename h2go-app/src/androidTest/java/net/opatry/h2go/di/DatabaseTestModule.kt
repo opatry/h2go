@@ -20,7 +20,7 @@
  * OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package net.opatry.h2go.data.di
+package net.opatry.h2go.di
 
 import androidx.room.Room
 import net.opatry.h2go.app.data.H2GoDatabase

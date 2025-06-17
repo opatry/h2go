@@ -25,6 +25,9 @@ style:
     excludeImportStatements: true
     excludeCommentStatements: true
     ignoreAnnotated: ['Test']
+  VarCouldBeVal:
+    active: true
+    ignoreAnnotated: ['Mock', 'InjectMocks']
   ClassOrdering:
     active: false
   UseIfInsteadOfWhen:
@@ -72,6 +75,11 @@ complexity:
     threshold: 60
   StringLiteralDuplication:
     active: false
+
+potential-bugs:
+  ImplicitUnitReturnType:
+    active: true
+    ignoreAnnotated: ['Test', 'ParameterizedTest', 'AfterEach', 'BeforeEach']
 
 performance:
   SpreadOperator:

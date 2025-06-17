@@ -104,7 +104,13 @@ class UserPreferencesRepositoryTest {
         )
 
         // When
-        val updatedPreferences = UserPreferences(1800, 200, VolumeUnit.Oz, false, 4.hours)
+        val updatedPreferences = UserPreferences(
+            dailyTarget = 1800,
+            glassVolume = 200,
+            volumeUnit = VolumeUnit.Oz,
+            areNotificationsEnabled = false,
+            notificationsFrequency = 4.hours
+        )
         repository.updateUserPreferences(updatedPreferences)
 
         // Then
@@ -126,7 +132,13 @@ class UserPreferencesRepositoryTest {
         )
 
         // When
-        val defaultPreferences = UserPreferences(2000, 25, VolumeUnit.Milliliter, true, 2.hours)
+        val defaultPreferences = UserPreferences(
+            dailyTarget = 2000,
+            glassVolume = 25,
+            volumeUnit = VolumeUnit.Milliliter,
+            areNotificationsEnabled = true,
+            notificationsFrequency = 2.hours
+        )
         repository.resetUserPreferences(defaultPreferences)
 
         // Then

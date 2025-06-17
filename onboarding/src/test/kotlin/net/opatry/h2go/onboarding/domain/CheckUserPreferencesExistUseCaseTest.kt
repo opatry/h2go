@@ -58,10 +58,10 @@ class CheckUserPreferencesExistUseCaseTest {
         given(repository.getUserPreferences()).willReturn(flowOf(preferences))
 
         // When
-        val result = useCase()
+        val hasPreferences = useCase()
 
         // Then
-        assertThat(result).isTrue()
+        assertThat(hasPreferences).isTrue()
     }
 
     @Test
@@ -70,9 +70,9 @@ class CheckUserPreferencesExistUseCaseTest {
         given(repository.getUserPreferences()).willReturn(flowOf(null))
 
         // When
-        val result = useCase()
+        val hasPreferences = useCase()
 
         // Then
-        assertThat(result).isFalse()
+        assertThat(hasPreferences).isFalse()
     }
 }

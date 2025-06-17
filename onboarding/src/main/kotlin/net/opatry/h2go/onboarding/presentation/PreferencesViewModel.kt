@@ -71,16 +71,15 @@ class PreferencesViewModel(
     fun savePreferences() {
         viewModelScope.launch {
             _uiState.update { it.copy(isSaving = true) }
-            runCatching {
+            try {
                 saveInitialUserPreferencesUseCase(
                     volumeUnit = volumeMapper.toDomain(uiState.value.selectedVolumeUnit),
                     areNotificationsEnabled = uiState.value.areNotificationsEnabled,
                     notificationsFrequency = uiState.value.notificationsFrequency,
                 )
-            }.onSuccess {
                 _uiState.update { it.copy(isSaving = false) }
                 _eventsFlow.emit(PreferencesEvent.NavigateToMain)
-            }.onFailure { e ->
+            } catch (@Suppress("detekt:TooGenericExceptionCaught") e: Exception) {
                 _uiState.update { it.copy(isSaving = false) }
                 _eventsFlow.emit(PreferencesEvent.Error(e.message ?: "Unknown error"))
             }

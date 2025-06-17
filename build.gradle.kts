@@ -110,6 +110,7 @@ allprojects {
             allRules = true
             parallel = true
             ignoreFailures = false
+            autoCorrect = true
         }
 
         dependencies {
@@ -122,10 +123,16 @@ allprojects {
     tasks.withType<Detekt>().configureEach {
         reports {
             txt.required.set(true)
-            html.required.set(false)
+            html.required.set(true)
             xml.required.set(false)
             sarif.required.set(false)
         }
+    }
+}
+
+tasks.register("detektAll") {
+    allprojects {
+        this@register.dependsOn(tasks.withType<Detekt>())
     }
 }
 

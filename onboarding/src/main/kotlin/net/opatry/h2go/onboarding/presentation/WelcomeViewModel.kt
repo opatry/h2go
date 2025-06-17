@@ -39,11 +39,9 @@ class WelcomeViewModel(
 
     fun checkUserPreferences() {
         viewModelScope.launch {
-            _uiState.value = checkUserPreferencesExistUseCase().let { exists ->
-                when {
-                    exists -> WelcomeUiState.NavigateToMain
-                    else -> WelcomeUiState.ShowWelcome
-                }
+            _uiState.value = when (val hasPreferences = checkUserPreferencesExistUseCase()) {
+                hasPreferences -> WelcomeUiState.NavigateToMain
+                else -> WelcomeUiState.ShowWelcome
             }
         }
     }

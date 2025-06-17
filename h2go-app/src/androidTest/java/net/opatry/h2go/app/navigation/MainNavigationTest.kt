@@ -32,7 +32,7 @@ import androidx.compose.ui.test.performClick
 import androidx.core.app.ActivityCompat.recreate
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.testing.TestNavHostController
-import net.opatry.h2go.data.di.databaseTestModule
+import net.opatry.h2go.di.databaseTestModule
 import net.opatry.h2go.onboarding.di.onboardingModule
 import net.opatry.h2go.onboarding.navigation.OnboardingRoutes
 import net.opatry.h2go.onboarding.ui.PreferencesScreenTestTag.SAVE_BUTTON
