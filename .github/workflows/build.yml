@@ -26,6 +26,6 @@ jobs:
 
   coverage:
     uses: ./.github/workflows/coverage.yml
-    
+
   code-style:
     uses: ./.github/workflows/code-style.yml
