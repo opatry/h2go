@@ -153,7 +153,7 @@ class UserPreferencesDaoTest {
     }
 
     @Test
-    fun `given existing preferences and default, when reseting, then user preferences results to default`() = runTest {
+    fun `given existing preferences and default, when resetting, then user preferences results to default`() = runTest {
         // Given
         dao.upsert(dummyPreferences)
 
