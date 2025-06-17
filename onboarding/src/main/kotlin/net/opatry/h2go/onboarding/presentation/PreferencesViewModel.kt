@@ -77,15 +77,13 @@ class PreferencesViewModel(
                     areNotificationsEnabled = uiState.value.areNotificationsEnabled,
                     notificationsFrequency = uiState.value.notificationsFrequency,
                 )
-            }.fold(
-                onSuccess = {
-                    _uiState.update { it.copy(isSaving = false) }
-                    _eventsFlow.emit(PreferencesEvent.NavigateToMain)
-                }, onFailure = { e ->
-                    _uiState.update { it.copy(isSaving = false) }
-                    _eventsFlow.emit(PreferencesEvent.Error(e.message ?: "Unknown error"))
-                }
-            )
+            }.onSuccess {
+                _uiState.update { it.copy(isSaving = false) }
+                _eventsFlow.emit(PreferencesEvent.NavigateToMain)
+            }.onFailure { e ->
+                _uiState.update { it.copy(isSaving = false) }
+                _eventsFlow.emit(PreferencesEvent.Error(e.message ?: "Unknown error"))
+            }
         }
     }
 }
