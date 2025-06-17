@@ -22,7 +22,6 @@
 
 package net.opatry.h2go.onboarding.presentation
 
-
 sealed interface WelcomeUiState {
     data object Idle : WelcomeUiState
     data object ShowWelcome : WelcomeUiState

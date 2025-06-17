@@ -107,7 +107,6 @@ allprojects {
         apply(plugin = libs.plugins.detekt.get().pluginId)
         detekt {
             config.setFrom("$rootDir/detekt.yml")
-            buildUponDefaultConfig = true
             allRules = true
             parallel = true
             ignoreFailures = false
@@ -115,6 +114,7 @@ allprojects {
 
         dependencies {
             detektPlugins(projects.detektRules)
+            detektPlugins(libs.detekt.formatting)
         }
     }
 

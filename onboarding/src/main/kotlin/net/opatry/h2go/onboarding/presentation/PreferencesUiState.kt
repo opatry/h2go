@@ -24,7 +24,6 @@ package net.opatry.h2go.onboarding.presentation
 
 import kotlin.time.Duration
 
-
 data class PreferencesUiState(
     val selectedVolumeUnit: UserVolumeUnit,
     val areNotificationsEnabled: Boolean,

@@ -52,7 +52,7 @@ class UserPreferencesRepositoryTest {
         dao = db.userPreferencesDao()
         repository = UserPreferencesRepositoryImpl(
             dao = dao,
-            mapper = mapper
+            mapper = mapper,
         )
     }
 

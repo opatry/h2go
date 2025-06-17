@@ -60,7 +60,7 @@ class UserPreferencesMapperTest {
             glassVolume = 250,
             volumeUnit = volumeUnitStr,
             areNotificationsEnabled = areNotificationsEnabled,
-            notificationFrequencyInHours = 2
+            notificationFrequencyInHours = 2,
         )
 
         // When

@@ -34,5 +34,4 @@ val preferencesModule = module {
     singleOf(::UserPreferencesMapper)
 
     singleOf(::UserPreferencesRepositoryImpl) bind UserPreferencesRepository::class
-
 }

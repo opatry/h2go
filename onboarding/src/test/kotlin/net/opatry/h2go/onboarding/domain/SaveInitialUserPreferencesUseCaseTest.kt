@@ -79,7 +79,6 @@ class SaveInitialUserPreferencesUseCaseTest {
         // Given
         givenParam: PreferencesParam,
     ) = runTest {
-
         // When
         useCase(
             volumeUnit = givenParam.volumeUnit,

@@ -46,7 +46,7 @@ class UserPreferencesDaoTest {
             glassVolume = 42,
             volumeUnit = "Milliliter",
             areNotificationsEnabled = false,
-            notificationFrequencyInHours = 0
+            notificationFrequencyInHours = 0,
         )
     }
 
@@ -109,7 +109,7 @@ class UserPreferencesDaoTest {
     @ParameterizedTest(name = "given {0}, when getting user preferences, then returns them")
     @MethodSource("preferencesParams")
     fun insertPreferences(
-        givenPreferences: UserPreferencesEntity
+        givenPreferences: UserPreferencesEntity,
     ) = runTest {
         // Given
         val id = dao.upsert(givenPreferences)
@@ -124,7 +124,7 @@ class UserPreferencesDaoTest {
     @ParameterizedTest(name = "given {0}, when upserting with new values, then returns them")
     @MethodSource("preferencesParams")
     fun updatePreferences(
-        givenPreferences: UserPreferencesEntity
+        givenPreferences: UserPreferencesEntity,
     ) = runTest {
         // Given
         val initialPreferences = dummyPreferences
@@ -158,7 +158,11 @@ class UserPreferencesDaoTest {
         dao.upsert(dummyPreferences)
 
         // When
-        val defaultPreferences = dummyPreferences.copy(dailyTarget = 5000, volumeUnit = "Oz", areNotificationsEnabled = true)
+        val defaultPreferences = dummyPreferences.copy(
+            dailyTarget = 5000,
+            volumeUnit = "Oz",
+            areNotificationsEnabled = true,
+        )
         dao.reset(defaultPreferences)
 
         // Then
