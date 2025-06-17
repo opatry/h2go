@@ -14,7 +14,7 @@ jobs:
       run: |
         ./gradlew --no-daemon --parallel --console=plain \
           detektAll \
-          -x release -x detektReleaseUnitTest
+          -x detektRelease -x detektReleaseUnitTest
         echo "### Detekt Report" >> $GITHUB_STEP_SUMMARY
         if [ -f build/reports/detekt/detekt.txt ]; then
           echo '```' >> $GITHUB_STEP_SUMMARY
